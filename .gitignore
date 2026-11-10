@@ -1,0 +1,13 @@
+# dados brutos (baixados por pipeline/fetch_raw.py) e intermediários grandes
+data/raw/*
+!data/raw/MANIFESTO.json
+data/processed/*.csv.gz
+# web
+web/node_modules/
+web/dist/
+# python
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/
+.DS_Store

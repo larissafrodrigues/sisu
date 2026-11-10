@@ -1,0 +1,138 @@
+{
+  "cortes_2010_2018": {
+    "arquivo": "cortes_2010_2018.xlsx",
+    "titulo": "Sisu 2010 a 2018 – Nota de corte",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/PORTAL_Sisu%202010%20a%202018_Nota%20de%20corte.xlsx",
+    "bytes": 15076134,
+    "sha256": "5bde3a01e8b92b39bf4d7d53d1fc99643c7bb9f3a82444590c1cabe8bc76a06b"
+  },
+  "cortes_2019": {
+    "arquivo": "cortes_2019.xlsx",
+    "titulo": "Sisu 2019/1 – Inscrições e notas de corte",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Inscri%C3%A7%C3%B5es%20e%20notas%20de%20corte_Sisu%202019-1.xlsx",
+    "bytes": 4191201,
+    "sha256": "44fb5d24ff5a7fd72ee78a18f2fd24d509d627e9ba6ce08012c671e8ae1ea8b0"
+  },
+  "cortes_2020": {
+    "arquivo": "cortes_2020.xlsx",
+    "titulo": "Sisu 2020/1 – Inscrições e notas de corte",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Sisu%202020-1_Inscri%C3%A7%C3%B5es%20e%20notas%20de%20corte.xlsx",
+    "bytes": 4246391,
+    "sha256": "0b6137a810a665fba279aa7ff02c1f860fb3afd4abfa4528ae0626064271a7b3"
+  },
+  "cortes_2021": {
+    "arquivo": "cortes_2021.xlsx",
+    "titulo": "Sisu 2021/1 – Inscrições e notas de corte",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Sisu%202021-1_Inscri%C3%A7%C3%B5es%20e%20nota%20de%20corte.xlsx",
+    "bytes": 3674862,
+    "sha256": "6a219075228b9d3997751bf059acf9f4bb27499242e13b656c7652dcf4029814"
+  },
+  "cortes_2022": {
+    "arquivo": "cortes_2022.xlsx",
+    "titulo": "Sisu 2022/1 – Inscrições e notas de corte",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Inscri%C3%A7%C3%B5es%20e%20notas%20de%20corte_Sisu%202022-1.xlsx",
+    "bytes": 4099153,
+    "sha256": "0de6af903c282393e8b0e49f6a9f0139e2ff1371583a4af1974aca717b25a37d"
+  },
+  "cortes_2023": {
+    "arquivo": "cortes_2023.xlsx",
+    "titulo": "Sisu 2023/1 – Inscrições e notas de corte",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Sisu%202023-1_Inscri%C3%A7%C3%B5es%20e%20notas%20de%20corte.xlsx",
+    "bytes": 4138259,
+    "sha256": "dcbfa544c4756ad68d34076e25bca64a7122bdfaaa4e5a62560eb1509aa4ce34"
+  },
+  "cortes_2024": {
+    "arquivo": "cortes_2024.xlsx",
+    "titulo": "Sisu 2024 – Inscrições e notas de corte",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Sisu%202024_Inscri%C3%A7%C3%B5es%20e%20notas%20de%20corte.xlsx",
+    "bytes": 5627646,
+    "sha256": "1426af04c4dac5e78580f33c8babd999db300a1efe87f0e5a563800844cb12a6"
+  },
+  "cortes_2025": {
+    "arquivo": "cortes_2025.xlsx",
+    "titulo": "Sisu 2025 – Inscrições e notas de corte",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Sisu%202025_Inscri%C3%A7%C3%B5es%20e%20notas%20de%20corte.xlsx",
+    "bytes": 5534455,
+    "sha256": "9f807f5f8dc620f150de8e9305faacc192cbe58f147433b5ddab758aa94154f5"
+  },
+  "cortes_2026": {
+    "arquivo": "cortes_2026.csv",
+    "titulo": "Sisu 2026 – Inscrições e notas de corte",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/gabrielhenriquekkj/ingressouniteste/f704e58c11fdeb3d3920e38267af8e2f3c37d2e3/doc/Sisu2026.csv.csv",
+    "bytes": 27770772,
+    "sha256": "dbb90360d6da5264a9c51c26646e7936c819643d2faf720a49942ae1ca2063a0"
+  },
+  "oferta_2019": {
+    "arquivo": "oferta_2019.xlsx",
+    "titulo": "Sisu 2019/1 – Vagas ofertadas",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Sisu%202019-1_Vagas%20ofertadas.xlsx",
+    "bytes": 7282496,
+    "sha256": "5eb4495e8fd71d8df524a9d4c8dc9b6e5b038bb392f61e96e0e6dd5d9479a6a2"
+  },
+  "oferta_2020": {
+    "arquivo": "oferta_2020.xlsx",
+    "titulo": "Sisu 2020/1 – Vagas ofertadas",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Sisu%202020-1_Vagas%20ofertadas.xlsx",
+    "bytes": 7300290,
+    "sha256": "0d4adcb76e573d844c204c424f2bd2b434628e4a68d63da2e08c4126b7f4c305"
+  },
+  "oferta_2021": {
+    "arquivo": "oferta_2021.xlsx",
+    "titulo": "Sisu 2021/1 – Vagas ofertadas",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20SIsu_Sisu%202021-1_Vagas%20ofertadas.xlsx",
+    "bytes": 6516429,
+    "sha256": "ab241f8fc8e676989d452473a11736a2f5c7ad5829f7e1a82a4ecff784b2866e"
+  },
+  "oferta_2022": {
+    "arquivo": "oferta_2022.xlsx",
+    "titulo": "Sisu 2022/1 – Vagas ofertadas",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Vagas%20ofertadas_2022_1.xlsx",
+    "bytes": 7294326,
+    "sha256": "5edd1aa73f2c26b4b3ce4a29dc3f08182d915a84ae6dd399e8607cac3e25765c"
+  },
+  "oferta_2023": {
+    "arquivo": "oferta_2023.xlsx",
+    "titulo": "Sisu 2023/1 – Vagas ofertadas",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal%20Sisu_Sisu%202023-1_Vagas%20ofertadas.xlsx",
+    "bytes": 7543303,
+    "sha256": "5624d3932e8fc40560cd4abccbaad6341321f841ef20f027a0ea6c0557d950ac"
+  },
+  "oferta_2024": {
+    "arquivo": "oferta_2024.xlsx",
+    "titulo": "Sisu 2024 – Vagas ofertadas",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal_Sisu%202024_Vagas%20ofertadas.xlsx",
+    "bytes": 10639898,
+    "sha256": "64bb36d55e0797cf38f5f3e36372d7252d269515008d60d43e4d5ea0c35fdea0"
+  },
+  "oferta_2025": {
+    "arquivo": "oferta_2025.xlsx",
+    "titulo": "Sisu 2025 – Vagas ofertadas",
+    "origem_oficial": "https://sisu.mec.gov.br/#/relatorio",
+    "espelho": "https://raw.githubusercontent.com/maiakanegae/sisu-data/308fe33838aecf22634de68c52d8b05d9434bd40/data/relatorios/Portal_Sisu%202025_Vagas%20ofertadas.xlsx",
+    "bytes": 9964115,
+    "sha256": "55421f486a641b746ef04c7676d6f9b6094d2b858afa05e9ea32f9cb47f25a6d"
+  },
+  "ufmg_chamadas": {
+    "arquivo": "ufmg_chamadas.csv",
+    "titulo": "SISU/UFMG – notas máximas e mínimas por chamada, 2014–2026",
+    "origem_oficial": "https://www.ufmg.br/sisu/repositorio/",
+    "espelho": "https://raw.githubusercontent.com/AndreIsraelAO/sisu-ufmg-notas-de-corte/a72d2642a4be02835e7905de620af6e7aed29427/data/notas_corte.csv",
+    "bytes": 12320584,
+    "sha256": "ad9d4fe85f41cf708ed8021ddb3cfdc1213c59eb8222b37d3d33a8bc56446188"
+  }
+}
