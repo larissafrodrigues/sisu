@@ -1,4 +1,4 @@
-# Bússola SISU — piloto gratuito
+# Bússola SISU 
 
 A Bússola SISU ajuda estudantes a explorar cursos, calcular suas notas ponderadas, comparar possíveis notas de corte, estimar chances de seleção, organizar duas opções de inscrição e entender a lista de espera.
 
@@ -7,15 +7,6 @@ O **Consultor** oferece respostas automáticas a perguntas comuns usando regras 
 **Tudo funciona no navegador**, com os dados já incluídos em `web/public/data/`. Não é necessário servidor de IA, API, Cloudflare, banco de dados nem conta dos estudantes. O perfil e a lista de interesse são guardados no armazenamento do navegador. A página pode ser hospedada gratuitamente no GitHub Pages.
 
 > **Aviso:** as previsões são estimativas e não garantem vaga. Confira o edital e as notas de corte parciais na plataforma oficial do SISU.
-
-## Publicar no GitHub Pages
-
-1. Crie um repositório no GitHub e envie os arquivos deste projeto para a raiz, incluindo `web/` e `.github/workflows/pages.yml`.
-2. Em **Settings → Pages**, selecione **GitHub Actions** como fonte de publicação.
-3. Envie as alterações para a branch `main`. O workflow instala as dependências, executa os testes e publica o site.
-4. Abra a URL informada na seção **Pages** do repositório (geralmente `https://SEU-USUARIO.github.io/NOME-DO-REPOSITORIO/`).
-
-Não é necessário criar `CONSULTOR_WORKER_URL` nem configurar nenhuma chave de API.
 
 ## Executar no seu computador
 
@@ -62,4 +53,3 @@ Os dados provêm de relatórios públicos do MEC e de listas de espera publicada
 - `docs/`: dados, arquitetura, descrição simples e especificação técnica.
 - `.github/workflows/pages.yml`: publicação automática no GitHub Pages.
 
-A versão atual não envia perguntas nem perfil a serviços de IA externos.
