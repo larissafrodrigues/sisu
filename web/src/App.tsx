@@ -60,6 +60,10 @@ function Casca({ tema, setTema }: { tema: Preferencia; setTema: (p: Preferencia)
         {rota === "estrategia" && <Estrategia ir={ir} />}
         {rota === "consultor" && <Consultor />}
         {rota === "metodo" && <Metodo />}
+         <footer className="rodape-site">
+         © {new Date().getFullYear()} <a href="https://larisafrodrigues.github.io" target="_blank" rel="noreferrer">Larissa Rodrigues</a> · Bússola SISU
+        </footer>
+        </footer>
       </main>
       {detalhe && <Detalhe id={detalhe} ir={ir} />}
     </div>

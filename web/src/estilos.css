@@ -347,3 +347,10 @@ details.mais > summary:hover { background: var(--sup2); border-radius: var(--rai
 details.mais[open] { padding: 0 20px 18px; }
 details.mais[open] > summary { padding: 14px 0; border-bottom: 1px solid var(--linha); }
 details.mais[open] > summary:hover { background: none; }
+
+/* Rodapé com a autoria */
+.rodape-site {
+  margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--linha);
+  font-size: 0.86rem; color: var(--mudo); text-align: center;
+}
+.rodape-site a { color: var(--marca2); }
