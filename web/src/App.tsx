@@ -63,7 +63,6 @@ function Casca({ tema, setTema }: { tema: Preferencia; setTema: (p: Preferencia)
          <footer className="rodape-site">
          © {new Date().getFullYear()} <a href="https://larisafrodrigues.github.io" target="_blank" rel="noreferrer">Larissa Rodrigues</a> · Bússola SISU
         </footer>
-        </footer>
       </main>
       {detalhe && <Detalhe id={detalhe} ir={ir} />}
     </div>
