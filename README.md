@@ -1,135 +1,65 @@
-# Bússola SISU
+# Bússola SISU — piloto gratuito
 
-Plataforma de apoio à decisão para o SISU. O estudante informa as notas do Enem e recebe, para cada
-curso de instituição pública, a **chance de ser selecionado**, a **previsão da nota de corte com
-intervalo de incerteza**, uma **estratégia para as duas opções** de inscrição e um **consultor
-conversacional** (LLM servido localmente pelo vLLM ou pelo Ollama) que explica e compara tudo isso.
+A Bússola SISU ajuda estudantes a explorar cursos, calcular suas notas ponderadas, comparar possíveis notas de corte, estimar chances de seleção, organizar duas opções de inscrição e entender a lista de espera.
 
-Tudo roda no navegador. O site é estático: funciona no GitHub Pages e em qualquer servidor de arquivos.
+O **Consultor** oferece respostas automáticas a perguntas comuns usando regras e resultados calculados pela plataforma. Ele não é um chatbot generativo: algumas perguntas fora dos temas previstos podem não receber respostas específicas.
 
-| | |
-|---|---|
-| Dados | Relatórios oficiais do SISU/MEC, 2014–2026 (≈ 549 mil linhas), mais as listas de espera da UFV e da UFMG (2022–2026) |
-| Catálogo | 7.390 ofertas, 136 instituições, 587 municípios, 274.133 vagas (SISU 2026) |
-| Modelo | Gradient boosting + cenários de choque de edição + calibração empírica; avaliado fora da amostra |
-| Erro | 23,7 pontos de erro absoluto médio (repetir a última nota de corte: 25,9); intervalos de 80% cobrem 79% em média |
-| LLM | vLLM (padrão) ou Ollama, servido pelo próprio usuário; modo offline determinístico quando não há servidor |
+**Tudo funciona no navegador**, com os dados já incluídos em `web/public/data/`. Não é necessário servidor de IA, API, Cloudflare, banco de dados nem conta dos estudantes. O perfil e a lista de interesse são guardados no armazenamento do navegador. A página pode ser hospedada gratuitamente no GitHub Pages.
 
-> **Aviso.** Previsão não é garantia de vaga. As regras do SISU 2027 dependem de edital do MEC que
-> ainda não existia quando os dados foram gerados (nov/2026); a plataforma assume as regras de 2026.
-
-## Rodar localmente
-
-Requisitos: Node 20+ (site) e, se quiser regenerar os dados, Python 3.11+.
-
-```bash
-cd web
-npm install
-npm run dev          # http://127.0.0.1:5173
-```
-
-Os dados já processados estão em `web/public/data/`, então o site funciona sem rodar o pipeline.
-
-### Consultor com IA (opcional)
-
-O consultor fala com um servidor de LLM que você mesmo roda. O padrão é o **vLLM**; o **Ollama**
-continua disponível no seletor “Servidor” da tela Consultor.
-
-**vLLM** (requer placa de vídeo NVIDIA com CUDA):
-
-```bash
-conda create -n vllm python=3.12 -y && conda activate vllm
-pip install vllm
-vllm serve Qwen/Qwen2.5-7B-Instruct-AWQ \
-  --host 127.0.0.1 --port 8000 --max-model-len 8192 --gpu-memory-utilization 0.85
-```
-
-Quando aparecer `Application startup complete`, abra a tela **Consultor**: ela detecta o servidor
-em `http://127.0.0.1:8000` e o modelo servido. Se iniciar o vLLM com `--api-key`, preencha o campo
-“Chave de API” (fica só no seu navegador). Qualquer servidor com API compatível com OpenAI
-(`/v1/models` e `/v1/chat/completions`) funciona da mesma forma.
-
-| VRAM | Modelo sugerido |
-|---|---|
-| 8 GB | `Qwen/Qwen2.5-7B-Instruct-AWQ` |
-| 16 GB ou mais | `Qwen/Qwen2.5-7B-Instruct` |
-| 24 GB ou mais | `Qwen/Qwen2.5-14B-Instruct-AWQ` |
-
-**Ollama** (roda também só com CPU): `ollama pull qwen2.5:7b`, depois escolha “Ollama” no seletor.
-
-Sem servidor algum, o consultor responde no **modo offline**, montando as respostas diretamente dos dados.
-
-### Regenerar os dados e o modelo
-
-```bash
-pip install -r pipeline/requirements.txt
-python -m pipeline.run_all        # baixa (~130 MB), limpa, treina, valida e exporta (≈ 5 min)
-python -m pipeline.ufv --conferir # confere a lista de espera da UFV com o site oficial
-python -m pytest pipeline/tests   # testes do pipeline
-cd web && npm test                # testes do motor e do consultor (usam os dados reais)
-```
+> **Aviso:** as previsões são estimativas e não garantem vaga. Confira o edital e as notas de corte parciais na plataforma oficial do SISU.
 
 ## Publicar no GitHub Pages
 
-1. Suba este repositório para o GitHub.
-2. Em *Settings → Pages → Build and deployment*, escolha **GitHub Actions**.
-3. A cada push na `main`, `.github/workflows/pages.yml` testa, compila e publica `web/dist`.
+1. Crie um repositório no GitHub e envie os arquivos deste projeto para a raiz, incluindo `web/` e `.github/workflows/pages.yml`.
+2. Em **Settings → Pages**, selecione **GitHub Actions** como fonte de publicação.
+3. Envie as alterações para a branch `main`. O workflow instala as dependências, executa os testes e publica o site.
+4. Abra a URL informada na seção **Pages** do repositório (geralmente `https://SEU-USUARIO.github.io/NOME-DO-REPOSITORIO/`).
 
-O build usa caminhos relativos (`base: "./"`) e rotas por hash, então funciona em
-`https://usuario.github.io/repositorio/` sem configuração extra.
+Não é necessário criar `CONSULTOR_WORKER_URL` nem configurar nenhuma chave de API.
 
-**Limitações da hospedagem estática, e como foram tratadas**
+## Executar no seu computador
 
-| Limitação | Solução |
-|---|---|
-| Não há servidor para rodar modelo | O pipeline pré-calcula previsão e escala por série; o navegador só faz a conta de probabilidade (`web/src/core`) |
-| Não há banco de dados | JSON colunar: `base.json` (≈ 1 MB comprimido) ao abrir; histórico por UF sob demanda |
-| Não há backend para o LLM | O navegador fala direto com o vLLM (ou Ollama) do usuário; sem ele, modo offline |
-| Site em HTTPS chamando `http://127.0.0.1` | Permitido pelos navegadores para endereços locais. O vLLM aceita qualquer origem por padrão (`--allowed-origins`); o Ollama precisa liberar a origem: `OLLAMA_ORIGINS="https://usuario.github.io" ollama serve` |
-| Não há contas de usuário | Perfil, lista e tema ficam no `localStorage` do navegador; nada é enviado |
+Requisitos: Node.js 20 ou superior.
 
-## Arquitetura
-
-```
-pipeline/  (Python, offline)                          web/  (TypeScript + React, no navegador)
-┌───────────┐  ┌──────┐  ┌────────┐  ┌──────────┐     ┌──────────────────────────────────────────┐
-│ fetch_raw │→ │ etl  │→ │ modelo │→ │ exportar │ ──▶ │ public/data/*.json                       │
-└───────────┘  └──────┘  └────────┘  └──────────┘     │ core/   notas · probabilidade · estratégia│
- relatórios     séries    backtest     JSON           │ llm/    análise → contexto → vLLM/offline │
- MEC/UFMG       limpas    calibração   compacto       │ views/  painel · explorar · comparar · …  │
-                └────────── espera ──────────┘        └──────────────────────────────────────────┘
+```bash
+cd web
+npm ci
+npm run dev
 ```
 
-- `pipeline/` — tudo que precisa de dados brutos e aprendizado de máquina. Detalhes em [docs/DADOS.md](docs/DADOS.md) e [docs/MODELO.md](docs/MODELO.md).
-- `web/src/core/` — regras do SISU e matemática, sem dependência de interface (testável em Node).
-- `web/src/llm/` — recuperação de fatos, montagem de contexto, clientes vLLM/Ollama e consultor offline.
-- `web/src/views/` e `web/src/ui/` — telas e componentes.
+Acesse `http://127.0.0.1:5173`.
 
-Mais em [docs/ARQUITETURA.md](docs/ARQUITETURA.md). Para entender os cálculos sem termos técnicos, leia [docs/METODOLOGIA.md](docs/METODOLOGIA.md).
+Para executar a bateria de testes e gerar a versão de produção:
 
-## Tema claro e escuro
+```bash
+cd web
+npm test
+npm run build
+```
 
-O seletor fica no menu lateral (no celular, na barra do topo): **Claro**, **Escuro** ou **Auto**, que
-segue o tema do aparelho. A escolha fica salva no navegador.
+## Atualizar os dados
 
-## O que a plataforma faz
+Os dados para visualização já acompanham o projeto. Para regenerá-los, use Python 3.11 ou superior:
 
-1. **Descoberta** — Painel e Explorar ordenam as 7.390 ofertas pelas preferências e pela chance; o Painel sugere cursos vizinhos da mesma área com chance alta.
-2. **Análise preditiva** — cada modalidade de cada curso tem previsão central, intervalo de 80%, rótulo de confiança e histórico desde 2014. A página Metodologia mostra o erro do modelo e a cobertura real dos intervalos.
-3. **Lista de espera** — chance de ser chamado depois da chamada regular, curso a curso: histórico próprio para os cursos da UFV e da UFMG, padrão dessas duas para as demais instituições.
-4. **Estratégia** — avalia todas as combinações ordenadas da lista do estudante sob as regras do edital (seleção em uma única opção; lista de espera só para quem não foi selecionado) e devolve planos equilibrado, seguro e ousado, com simulador de “e se”.
-5. **Consultor** — LLM fundamentado: a cada pergunta recebe só os fatos calculados pela plataforma e as regras com fonte, e a resposta mostra os dados usados.
+```bash
+pip install -r pipeline/requirements.txt
+python -m pipeline.run_all
+```
 
-## Fontes
+A atualização pode exigir downloads de fontes externas; ela não é necessária para publicar o piloto com os dados disponíveis.
 
-Relatórios “Inscrições e notas de corte” e “Vagas ofertadas” do SISU, publicados pelo MEC em
-<https://sisu.mec.gov.br/#/relatorio>, e “notas máximas e mínimas por chamada” da UFMG
-(<https://www.ufmg.br/sisu/repositorio/>), e listas de espera da UFV (<https://www2.pse.ufv.br>). O pipeline baixa cópias desses arquivos de espelhos
-públicos fixados por commit e grava o SHA-256 de cada um em `data/raw/MANIFESTO.json`; a lista
-completa, com links, aparece na página Metodologia e em [docs/DADOS.md](docs/DADOS.md).
+## Como são feitas as estimativas?
 
-Regras: Edital SESu/MEC nº 29/2025 (SISU 2026) e Lei nº 14.723/2023.
+A plataforma calcula a nota do estudante usando os pesos do curso; considera os resultados anteriores para estimar a nota de corte; e avalia diferentes situações para mostrar uma faixa de corte e uma chance aproximada. Consulte [a explicação simples](docs/METODOLOGIA.md) e [os detalhes técnicos](docs/MODELO.md).
 
-## Licença
+Os dados provêm de relatórios públicos do MEC e de listas de espera publicadas pela UFV e pela UFMG. As estimativas da lista de espera fora dessas universidades são menos confiáveis.
 
-Código sob licença MIT. Os dados são públicos e pertencem às suas fontes.
+## Estrutura
+
+- `web/`: interface React/Vite, catálogo pré-processado e cálculos no navegador.
+- `web/src/consultoria/`: interpretação de perguntas frequentes e respostas automáticas baseadas em regras.
+- `pipeline/`: processamento das fontes e atualização dos resultados.
+- `docs/`: dados, arquitetura, descrição simples e especificação técnica.
+- `.github/workflows/pages.yml`: publicação automática no GitHub Pages.
+
+A versão atual não envia perguntas nem perfil a serviços de IA externos.

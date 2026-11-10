@@ -1,6 +1,6 @@
 /**
  * Recuperação de contexto: transforma a pergunta + o estado do app em fatos estruturados.
- * É a etapa de "grounding": o assistente só fala de números que saem daqui.
+ * Os dados exibidos nas respostas são recuperados dos cálculos da plataforma.
  */
 import type { Avaliacao } from "../core/avaliacao";
 import { chanceEspera, type ChanceEspera } from "../core/espera";

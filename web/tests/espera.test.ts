@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import { avaliarTudo } from "../src/core/avaliacao";
 import { chanceEspera, distribuicaoQueda, faixaEspera, quantilQueda, vetoresEspera } from "../src/core/espera";
 import { Motor } from "../src/core/probabilidade";
-import { analisar } from "../src/llm/analise";
-import { montarContexto } from "../src/llm/contexto";
-import { responderOffline } from "../src/llm/offline";
+import { analisar } from "../src/consultoria/analise";
+import { montarContexto } from "../src/consultoria/contexto";
+import { responderOffline } from "../src/consultoria/offline";
 import type { Estado } from "../src/state/store";
 import { base, perfil } from "./apoio";
 
@@ -104,7 +104,7 @@ describe("consultor", () => {
   it("responde sobre lista de espera com os números do curso e a fonte", () => {
     const estado: Estado = {
       perfil: perfil({ edicoes: [{ ano: 2026, notas: { red: 760, lc: 640, mt: 660, ch: 650, cn: 640 } }] }),
-      lista: [], comparar: [], llm: { provedor: "vllm", url: "", chave: "", modelo: "", ativo: false },
+      lista: [], comparar: [],
     };
     const avals = avaliarTudo(b, motor, estado.perfil);
     const por = new Map(avals.map((a) => [a.oferta.id, a]));

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { carregarRelatorio } from "../core/dados";
 import { ROTULO_FAIXA, type Faixa } from "../core/probabilidade";
 import { fmt } from "../core/texto";
-import { REGRAS } from "../llm/regras";
+import { REGRAS } from "../consultoria/regras";
 import { useApp } from "../state/store";
 import { Glifo } from "../ui/Chance";
 
@@ -28,91 +28,76 @@ export function Metodo() {
       <div className="cab">
         <div>
           <h1>Como calculamos</h1>
-          <p>O essencial, sem termos técnicos. Dados atualizados em {new Date(base.geradoEm + "T12:00:00").toLocaleDateString("pt-BR")}.</p>
+          <p>Entenda de onde vêm as estimativas. Dados atualizados em {new Date(base.geradoEm + "T12:00:00").toLocaleDateString("pt-BR")}.</p>
         </div>
       </div>
 
       <section className="painel">
-        <h2>Em poucas palavras</h2>
+        <h2>Como funciona?</h2>
         <div className="prosa" style={{ marginTop: 10 }}>
-          <p>
-            Comparamos a sua nota com a nota de corte que esperamos para {alvo} em cada curso. Essa expectativa vem do histórico oficial do SISU, de {r.primeiro_ano} a {r.ano_base}.
-          </p>
-          <p>
-            Como a nota de corte muda de um ano para o outro, não mostramos um número só: mostramos uma <strong>faixa provável</strong> e a <strong>chance</strong> de a sua nota ser suficiente.
-          </p>
+          <p>Você informa suas notas do Enem e escolhe os cursos que gostaria de fazer. A Bússola SISU usa os resultados de anos anteriores para ajudar você a entender onde sua nota pode ser suficiente.</p>
+          <p><strong>Importante:</strong> ninguém sabe com antecedência qual será a nota de corte de {alvo}. Por isso, mostramos uma estimativa, e não uma promessa de aprovação.</p>
         </div>
       </section>
 
       <div className="grade3" style={{ marginTop: 18 }}>
         <section className="painel passo">
           <span className="n">1</span>
-          <h3>Sua nota no curso</h3>
-          <p>Cada curso dá pesos diferentes às provas do Enem. Calculamos a sua média com os pesos daquele curso e conferimos as notas mínimas exigidas.</p>
+          <h3>Calculamos sua nota</h3>
+          <p>Um curso pode dar mais importância à Matemática, outro à Redação. Aplicamos os pesos e verificamos as notas mínimas exigidas.</p>
         </section>
         <section className="painel passo">
           <span className="n">2</span>
-          <h3>A nota de corte esperada</h3>
-          <p>Olhamos o histórico do curso: a última nota de corte, se ela vinha subindo ou caindo, quantas vagas e quantos inscritos teve. Com isso estimamos a de {alvo}.</p>
+          <h3>Olhamos os anos anteriores</h3>
+          <p>Comparamos as notas de corte dos anos de {r.primeiro_ano} a {r.ano_base}, as vagas e a procura dos estudantes. A <strong>nota de corte</strong> é a nota do último selecionado na chamada regular.</p>
         </section>
         <section className="painel passo">
           <span className="n">3</span>
-          <h3>A sua chance</h3>
-          <p>Ninguém sabe se a próxima edição será mais ou menos disputada. Por isso testamos vários cenários, baseados no que já aconteceu em anos anteriores. A chance é a parte dos cenários em que a sua nota alcança o corte.</p>
+          <h3>Estimamos suas chances</h3>
+          <p>Consideramos possibilidades em que a nota de corte sobe ou desce. Assim, mostramos sua chance estimada e uma faixa em que o corte pode ficar.</p>
         </section>
       </div>
 
       <section className="painel">
-        <h2>Como ler a chance</h2>
+        <h2>O que significa ter 70% de chance?</h2>
         <div className="prosa" style={{ marginTop: 10 }}>
-          <p>Chance de 70% quer dizer: em 10 situações parecidas, a nota foi suficiente em 7. <strong>Não é garantia de vaga.</strong></p>
+          <p>Imagine 10 situações possíveis parecidas com os anos anteriores. Em cerca de 7 delas, sua nota seria suficiente. <strong>Isso não quer dizer que 7 de cada 10 pessoas serão aprovadas.</strong> É uma estimativa sobre a sua nota e a disputa pelo curso.</p>
         </div>
         <ul className="legenda-faixas">
           {FAIXAS.map(([f, d]) => <li key={f}><Glifo faixa={f} /> <strong>{ROTULO_FAIXA[f]}</strong> <span className="mudo">{d}</span></li>)}
         </ul>
-        <div className="prosa">
-          <p>Cada previsão traz também um selo de <strong>confiança</strong> (alta, média ou baixa). Ele diz o quanto o histórico daquele curso ajuda a prever. Cursos com uma ou duas vagas e cotas criadas há pouco tempo costumam ter confiança baixa.</p>
+        <p className="mudo" style={{ marginTop: 10 }}>Você também verá se temos muitos ou poucos dados sobre o curso. Quanto menos histórico, maior a dúvida.</p>
+      </section>
+
+      <section className="painel">
+        <h2>Como usar a Bússola SISU?</h2>
+        <div className="prosa" style={{ marginTop: 10 }}>
+          <p>Confira cursos em <strong>Explorar</strong>, coloque os favoritos na sua lista e abra <strong>Estratégia</strong> para comparar suas duas opções de inscrição. A seção <strong>Lista de espera</strong> ajuda a entender a possibilidade de ser chamado depois.</p>
+          <p>Os dados vêm de relatórios públicos do MEC e de listas de espera publicadas pela UFV e pela UFMG. Para outras instituições, a estimativa da lista de espera é menos segura.</p>
         </div>
       </section>
 
       <section className="painel">
-        <h2>Dá para confiar?</h2>
-        <p className="mudo" style={{ margin: "6px 0 14px", maxWidth: "70ch" }}>
-          Testamos o método no passado: com os dados até um ano, previmos o ano seguinte e comparamos com o que aconteceu de verdade ({anos[0]} a {anos[anos.length - 1]}).
-        </p>
-        <div className="numeros">
-          <div><span className="n">{fmt.int(modelo.mediana_abs)} pontos</span><span className="d">Metade das previsões errou menos do que isso.</span></div>
-          <div><span className="n">{emDez} em cada 10</span><span className="d">Vezes em que a nota de corte real ficou dentro da faixa prevista.</span></div>
-          <div><span className="n">{fmt.int(modelo.p90_abs)} pontos</span><span className="d">Uma em cada 10 previsões errou mais do que isso.</span></div>
-        </div>
-        <div className="prosa" style={{ marginTop: 14 }}>
-          <p>
-            Em anos fora do comum o erro é maior. Em 2026, quando o SISU passou a aceitar três edições do Enem, as notas de corte subiram mais do que o previsto em quase todos os cursos.
-            Por isso vale ter sempre uma segunda opção mais segura.
-          </p>
+        <h2>O que pode mudar?</h2>
+        <div className="prosa" style={{ marginTop: 10 }}>
+          <p>O número de candidatos, as vagas, os pesos e as regras do SISU podem mudar. Enquanto o edital de {alvo} não estiver disponível, usamos as informações mais recentes que temos.</p>
+          <p><strong>Durante as inscrições, acompanhe as notas de corte parciais no SISU oficial.</strong> Elas refletem a disputa daquele momento e ajudam a revisar sua escolha.</p>
         </div>
       </section>
 
-      <div className="grade2" style={{ marginTop: 18 }}>
-        <section className="painel">
-          <h2>O que a plataforma não sabe</h2>
-          <ul className="prosa" style={{ margin: "10px 0 0", paddingLeft: 18 }}>
-            <li><strong>As regras, vagas e pesos de {alvo}.</strong> Até o MEC publicar, usamos os das edições anteriores.</li>
-            <li><strong>A lista de espera fora da UFV e da UFMG.</strong> O MEC não divulga essas notas. Para as outras instituições usamos o padrão dessas duas, uma referência mais fraca.</li>
-            <li><strong>O que acontece durante a inscrição.</strong> A nota de corte parcial do próprio SISU, que muda todo dia, é informação melhor do que qualquer previsão. Acompanhe.</li>
-          </ul>
-        </section>
-        <section className="painel">
-          <h2>De onde vêm os dados</h2>
-          <div className="prosa" style={{ marginTop: 10 }}>
-            <p>Dos relatórios públicos do MEC com as notas de corte, vagas e inscritos do SISU. Para a lista de espera, das páginas oficiais da UFV e da UFMG. Não usamos dados inventados.</p>
-            <p><strong>O consultor</strong> não faz contas: ele recebe os números calculados aqui e os explica em texto. Em cada resposta você pode abrir os dados que ele usou.</p>
-          </div>
-        </section>
-      </div>
+      <details className="painel mais">
+        <summary>Como verificamos se as estimativas funcionam?</summary>
+        <p className="mudo" style={{ margin: "12px 0", maxWidth: "75ch" }}>Usamos dados de anos anteriores para fazer previsões de anos que já aconteceram ({anos[0]} a {anos[anos.length - 1]}). Depois, comparamos com os resultados reais.</p>
+        <div className="numeros">
+          <div><span className="n">{fmt.int(modelo.mediana_abs)} pontos</span><span className="d">Metade das previsões errou menos do que isso.</span></div>
+          <div><span className="n">{emDez} em cada 10</span><span className="d">Vezes em que a nota de corte real ficou na faixa prevista.</span></div>
+          <div><span className="n">{fmt.int(modelo.p90_abs)} pontos</span><span className="d">Uma em cada 10 previsões errou mais do que isso.</span></div>
+        </div>
+        <p className="mudo" style={{ marginTop: 12 }}>Em anos de mudanças importantes, o erro pode ser maior. Em 2026, o SISU passou a aceitar três edições do Enem e as notas de corte subiram mais do que o esperado em muitos cursos.</p>
+      </details>
 
       <h2 style={{ margin: "28px 0 4px" }}>Quer os detalhes?</h2>
-      <p className="mudo" style={{ marginBottom: 12 }}>Para quem quiser conferir. Não é preciso ler para usar a plataforma.</p>
+      <p className="mudo" style={{ marginBottom: 12 }}>Fontes, testes e regras estão disponíveis para quem quiser conferir.</p>
 
       <details className="painel mais">
         <summary>Lista de arquivos usados</summary>

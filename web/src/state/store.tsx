@@ -1,9 +1,8 @@
-/** Estado global: perfil, lista de interesse, comparação e configuração do assistente. */
+/** Estado global: perfil, lista de interesse, comparação e consultor de orientação. */
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { avaliarTudo, perfilTemNotas, type Avaliacao } from "../core/avaliacao";
 import { Motor } from "../core/probabilidade";
 import type { Base, Perfil } from "../core/tipos";
-import { PROVEDORES, PROVEDOR_PADRAO, type IdProvedor } from "../llm/provedores";
 
 export interface ItemLista {
   id: string; // id da oferta
@@ -11,20 +10,11 @@ export interface ItemLista {
   mod: string | null; // código da modalidade escolhida; null = melhor modalidade do perfil
 }
 
-export interface ConfigLLM {
-  provedor: IdProvedor;
-  url: string;
-  /** Chave de API opcional (vLLM iniciado com --api-key). Fica só neste navegador. */
-  chave: string;
-  modelo: string;
-  ativo: boolean;
-}
 
 export interface Estado {
   perfil: Perfil;
   lista: ItemLista[];
   comparar: string[];
-  llm: ConfigLLM;
 }
 
 export const MAX_COMPARAR = 3;
@@ -45,7 +35,6 @@ function ler(anoAlvo: number): Estado {
     perfil: perfilVazio(anoAlvo),
     lista: [],
     comparar: [],
-    llm: { provedor: PROVEDOR_PADRAO, url: PROVEDORES[PROVEDOR_PADRAO].urlPadrao, chave: "", modelo: "", ativo: true },
   };
   try {
     const bruto = localStorage.getItem(CHAVE);
@@ -55,8 +44,6 @@ function ler(anoAlvo: number): Estado {
       perfil: { ...padrao.perfil, ...salvo.perfil },
       lista: salvo.lista ?? [],
       comparar: salvo.comparar ?? [],
-      // configuração salva antes da escolha de provedor (só Ollama) é descartada: o padrão agora é o vLLM
-      llm: salvo.llm?.provedor && salvo.llm.provedor in PROVEDORES ? { ...padrao.llm, ...salvo.llm } : padrao.llm,
     };
   } catch {
     return padrao; // armazenamento indisponível ou corrompido: segue só em memória
@@ -74,7 +61,6 @@ interface Contexto {
   alternarLista: (id: string) => void;
   atualizarItem: (id: string, parcial: Partial<ItemLista>) => void;
   alternarComparar: (id: string) => void;
-  setLLM: (c: Partial<ConfigLLM>) => void;
   detalhe: string | null;
   abrirDetalhe: (id: string | null) => void;
   limparTudo: () => void;
@@ -110,12 +96,11 @@ export function Provedor({ base, children }: { base: Base; children: ReactNode }
     ...e,
     comparar: e.comparar.includes(id) ? e.comparar.filter((x) => x !== id) : [...e.comparar, id].slice(-MAX_COMPARAR),
   })), []);
-  const setLLM = useCallback((c: Partial<ConfigLLM>) => setEstado((e) => ({ ...e, llm: { ...e.llm, ...c } })), []);
   const limparTudo = useCallback(() => setEstado((e) => ({ ...e, perfil: perfilVazio(base.anoAlvo), lista: [], comparar: [] })), [base]);
 
   const valor: Contexto = {
     base, motor, estado, temNotas: perfilTemNotas(estado.perfil), avaliacoes, porOferta,
-    setPerfil, alternarLista, atualizarItem, alternarComparar, setLLM, detalhe, abrirDetalhe, limparTudo,
+    setPerfil, alternarLista, atualizarItem, alternarComparar, detalhe, abrirDetalhe, limparTudo,
   };
   return <Ctx.Provider value={valor}>{children}</Ctx.Provider>;
 }

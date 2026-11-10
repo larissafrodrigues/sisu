@@ -1,7 +1,6 @@
 /**
- * Consultor offline: respostas determinísticas montadas a partir dos mesmos fatos que iriam
- * para o LLM. É o que funciona no GitHub Pages quando não há servidor de LLM acessível — e serve de
- * piso de qualidade: nada aqui pode "alucinar", porque tudo vem do motor de análise.
+ * Respostas automáticas baseadas em regras e nos resultados calculados no navegador.
+ * Não usa serviços externos nem gera respostas livres por modelo de linguagem.
  */
 import type { Avaliacao } from "../core/avaliacao";
 import { ROTULO_FAIXA, faixaDe } from "../core/probabilidade";
@@ -76,8 +75,8 @@ export function responderOffline(base: Base, estado: Estado, an: Analise, temNot
     return out.join("\n\n");
   }
   if (tem(q, "confia", "modelo", "como funciona", "metodologia", "previs", "erro", "incerteza")) {
-    out.push("A previsão parte da última nota de corte e de um modelo de aprendizado de máquina (gradient boosting) treinado em 2014–2026 para estimar o que é previsível: reversão à média, tamanho da turma, tipo de cota, concorrência.");
-    out.push("O que **não** é previsível — a edição inteira subir ou descer — entra como cenários tirados dos choques observados em 2019–2026. Por isso toda chance vem com intervalo.");
+    out.push("Olhamos as notas de corte dos anos anteriores e como elas mudaram. Também consideramos vagas, concorrência e o tipo de vaga que você pode disputar.");
+    out.push("Como não dá para saber antecipadamente quantas pessoas vão escolher cada curso, calculamos possibilidades diferentes. Por isso mostramos uma faixa de notas e uma chance estimada, não uma promessa de aprovação.");
     LIMITES.slice(1, 3).forEach((t) => out.push("- " + t));
     out.push("Os números de validação estão em **Metodologia**.");
     return out.join("\n\n");

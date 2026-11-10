@@ -1,7 +1,6 @@
 /**
  * Base de conhecimento curta sobre as regras do SISU, com a fonte de cada afirmação.
- * Entra no contexto do assistente (LLM ou modo offline) para que ele não precise "lembrar"
- * de regras — e para que a pessoa possa conferir.
+ * Usada pelo consultor de respostas predefinidas e para conferência das fontes.
  */
 export interface Regra {
   id: string;

@@ -1,91 +1,31 @@
-# Como a Bússola SISU calcula
+# Entenda como a Bússola SISU funciona
 
-Versão curta, sem termos técnicos. A descrição completa do modelo está em [MODELO.md](MODELO.md).
-
-## Em poucas palavras
-
-Comparamos a nota do estudante com a nota de corte que esperamos para 2027 em cada curso. Essa
-expectativa vem do histórico oficial do SISU, de 2014 a 2026.
-
-Como a nota de corte muda de um ano para o outro, a plataforma não mostra um número só: mostra uma
-**faixa provável** e a **chance** de a nota ser suficiente.
+A Bússola SISU ajuda você a comparar sua nota do Enem com a disputa por vagas nas universidades públicas. Ela usa dados de anos anteriores para fazer estimativas.
 
 ## Três passos
 
-1. **A nota no curso.** Cada curso dá pesos diferentes às provas do Enem. Calculamos a média com os
-   pesos daquele curso e conferimos as notas mínimas exigidas.
-2. **A nota de corte esperada.** Olhamos o histórico do curso: a última nota de corte, se ela vinha
-   subindo ou caindo, quantas vagas e quantos inscritos teve. Com isso estimamos a de 2027.
-3. **A chance.** Ninguém sabe se a próxima edição será mais ou menos disputada. Por isso testamos
-   vários cenários, baseados no que já aconteceu em anos anteriores. A chance é a parte dos cenários
-   em que a nota alcança o corte.
+1. **Calculamos sua nota.** Cada curso pode dar pesos diferentes às provas do Enem. Fazemos essa conta e conferimos se você atinge as notas mínimas.
+2. **Olhamos o histórico.** Comparamos as notas de corte, vagas e procura de edições anteriores. A nota de corte é a nota do último selecionado na chamada regular.
+3. **Estimamos suas chances.** Como a nota de corte muda, consideramos diferentes situações em que ela sobe ou desce. Mostramos uma chance aproximada e uma faixa possível de corte.
 
-## Como ler a chance
+## O que quer dizer 70% de chance?
 
-Chance de 70% quer dizer: em 10 situações parecidas, a nota foi suficiente em 7. **Não é garantia
-de vaga.**
+Significa que, nas situações consideradas pela plataforma, sua nota seria suficiente em cerca de 7 de cada 10. **Não significa que você está aprovado** nem que 70% dos candidatos vão passar.
 
-| Faixa | Chance |
-|---|---|
-| Alta | 80% ou mais |
-| Moderada | de 50% a 79% |
-| Baixa | de 20% a 49% |
-| Remota | menos de 20% |
+As chances recebem estes rótulos: alta (80% ou mais), moderada (50% a 79%), baixa (20% a 49%) e remota (menos de 20%). Também informamos quando o curso tem pouco histórico, pois a previsão fica menos segura.
 
-Cada previsão traz também um selo de **confiança** (alta, média ou baixa). Ele diz o quanto o
-histórico daquele curso ajuda a prever. Cursos com uma ou duas vagas e cotas criadas há pouco tempo
-costumam ter confiança baixa.
+## Como usar
 
-## Dá para confiar?
+Você pode pesquisar cursos em **Explorar**, guardar os que mais gosta, comparar suas duas opções em **Estratégia** e consultar a **Lista de espera**. O **Consultor** responde automaticamente a perguntas comuns usando os dados do próprio site, sem serviços de IA generativa.
 
-Testamos o método no passado: com os dados até um ano, previmos o ano seguinte e comparamos com o
-que aconteceu de verdade (2019 a 2026).
+## O que não sabemos
 
-- **Metade das previsões errou menos de 16 pontos.**
-- **Em 8 de cada 10 casos**, a nota de corte real ficou dentro da faixa prevista.
-- **Uma em cada 10 previsões errou mais de 54 pontos.**
+O número de candidatos, as vagas, as regras e os pesos podem mudar até a próxima edição. Quando o edital ainda não foi publicado, usamos as informações mais recentes. Durante as inscrições, confira sempre as notas de corte parciais no SISU oficial.
 
-O ganho sobre simplesmente repetir a última nota de corte é pequeno (erro médio de 23,7 pontos
-contra 25,9). O que a plataforma acrescenta é mostrar o tamanho da incerteza.
+## De onde vêm as informações?
 
-Em anos fora do comum o erro é maior. Em 2026, quando o SISU passou a aceitar três edições do Enem,
-as notas de corte subiram mais do que o previsto em quase todos os cursos.
+De relatórios públicos do MEC sobre o SISU e das listas oficiais de espera da UFV e da UFMG. Para outras universidades, a estimativa da lista de espera é menos segura.
 
-## As duas opções
+## Para quem quer conferir os cálculos
 
-A plataforma segue as regras do edital de 2026: quem é selecionado em qualquer uma das duas opções
-não pode entrar na lista de espera. Por isso uma 2ª opção "garantida" protege contra ficar sem
-vaga, mas tira a chance de ser chamado depois na 1ª. A tela Estratégia calcula essa troca para cada
-combinação e sugere três planos: equilibrado, seguro e ousado.
-
-## A lista de espera
-
-Quem não passa na chamada regular pode entrar na lista de espera de uma das opções. Para saber
-até onde a lista costuma descer, usamos as listas oficiais da **UFV** e da **UFMG** de 2022 a 2026:
-em cada curso, quanto a menor nota chamada ficou abaixo do corte da chamada regular.
-
-- **Cursos da UFV e da UFMG:** usamos o histórico do próprio curso, misturado com o padrão de cursos
-  parecidos (com cinco anos só, um ano fora da curva pesaria demais).
-- **Outras instituições:** usamos o padrão da UFV e da UFMG para cursos com o mesmo tipo de cota e
-  nota de corte parecida. É uma estimativa mais fraca, e a tela avisa.
-
-A tela **Lista de espera** mostra, para cada curso, a chance na chamada regular, a chance de ser
-chamado depois para quem não passou e a chance ao todo.
-
-## O que a plataforma não sabe
-
-- **As regras, vagas e pesos de 2027.** Até o MEC publicar, usamos os das edições anteriores.
-- **A lista de espera fora da UFV e da UFMG.** O MEC não divulga essas notas. Nas outras instituições
-  a estimativa usa o padrão dessas duas, que pode não valer para todas.
-- **O que acontece durante a inscrição.** A nota de corte parcial do próprio SISU, que muda todo
-  dia, é informação melhor do que qualquer previsão.
-
-## De onde vêm os dados
-
-Dos relatórios públicos do MEC com as notas de corte, vagas e inscritos do SISU. Para a lista de
-espera, das páginas oficiais da UFV e da UFMG. A lista de arquivos está em [DADOS.md](DADOS.md).
-
-## O consultor
-
-O consultor não faz contas: ele recebe os números calculados pela plataforma e os explica em
-texto. Em cada resposta dá para abrir os dados que ele usou.
+A página **Metodologia** do site mostra os testes feitos com resultados de anos anteriores. Os detalhes técnicos e as limitações estão em [MODELO.md](MODELO.md), e as fontes estão em [DADOS.md](DADOS.md).

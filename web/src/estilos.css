@@ -310,9 +310,6 @@ input[type="range"] { accent-color: var(--marca2); width: 100%; }
 .msg .origem { display: block; margin-top: 8px; font-size: 0.74rem; color: var(--mudo); }
 .compor { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--linha); background: var(--sup); }
 .compor textarea { flex: 1; resize: none; border: 1px solid var(--linha); border-radius: 10px; padding: 9px 12px; background: var(--fundo); min-height: 44px; max-height: 120px; }
-.estado-llm { display: inline-flex; align-items: center; gap: 7px; font-size: 0.84rem; font-weight: 600; }
-.estado-llm i { width: 8px; height: 8px; border-radius: 50%; background: var(--mudo); }
-.estado-llm.ok i { background: var(--bom); }
 details.ctx { font-size: 0.8rem; }
 details.ctx pre { white-space: pre-wrap; background: var(--sup2); padding: 12px; border-radius: 8px; max-height: 320px; overflow: auto; font: 0.76rem/1.5 ui-monospace, monospace; }
 

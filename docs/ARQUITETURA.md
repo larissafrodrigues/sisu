@@ -6,7 +6,7 @@
 2. **Uma fonte de verdade por conta.** A matemática de probabilidade existe em Python (calibração) e em
    TypeScript (uso). Um teste (`web/tests/motor.test.ts`) confere que o TypeScript reproduz os quantis
    exportados pelo Python.
-3. **O LLM não calcula.** Ele recebe fatos prontos e redige. Qualquer número citado tem de estar no contexto.
+3. **Consultor local.** As respostas seguem regras e números calculados pelo site, sem chamar modelos de linguagem externos.
 4. **Incerteza é dado de primeira classe.** Toda série carrega previsão central, escala de erro e
    rótulo de confiança; toda tela que mostra chance mostra também o intervalo.
 
@@ -40,26 +40,24 @@
 | `estrategia.ts` | Desfechos de um par ordenado de opções, lista de espera, três planos |
 | `lista.ts` | Ponte entre a lista salva e os candidatos da estratégia |
 
-### `web/src/llm/`
+### `web/src/consultoria/`
 
 ```
-pergunta ──▶ analise.ts ──▶ fatos estruturados ──┬──▶ contexto.ts ──▶ provedores.ts ──▶ resposta em streaming
-             (entidades,     (ofertas, planos,   │     (prompt + contexto)   ├ openai.ts (vLLM)
-              recuperação)    panorama)          │                           └ ollama.ts
-                                                 └──▶ offline.ts ──▶ resposta determinística
+pergunta ──▶ analise.ts ──▶ dados do perfil + ofertas relevantes ──▶ offline.ts ──▶ resposta baseada em regras
+                                    │
+                                    └──▶ contexto.ts (dados para conferência)
 ```
 
-- `analise.ts` reconhece cursos, siglas de instituições, estados e cidades na pergunta e recupera as
-  ofertas correspondentes já avaliadas para o perfil.
-- `regras.ts` guarda as regras do SISU com a fonte de cada uma.
-- `provedores.ts` escolhe o servidor configurado. `openai.ts` fala com o vLLM (ou qualquer servidor
-  compatível com OpenAI) por `/v1/models` e `/v1/chat/completions` com streaming SSE; `ollama.ts` usa
-  `/api/tags` e `/api/chat` (NDJSON). Acrescentar um servidor é implementar `verificar` e `conversar`
-  e registrá-lo em `PROVEDORES`.
+- `analise.ts` reconhece nomes de cursos, instituições e cidades, e identifica dados relevantes.
+- `offline.ts` seleciona a resposta automática a partir de regras e das avaliações calculadas.
+- `contexto.ts` prepara um resumo consultável dos dados usados.
+- `regras.ts` reúne regras do SISU e suas fontes.
+
+Não há API de chatbot, conexão com servidores de modelos ou cobrança por perguntas.
 
 ### Estado
 
-`state/store.tsx` mantém perfil, lista de interesse, comparação e configuração do LLM (servidor, endereço, chave, modelo) em um contexto
+`state/store.tsx` mantém perfil, lista de interesse e comparação em um contexto
 React, persistido em `localStorage` (com `try/catch`: se o armazenamento falhar, o app segue em memória).
 As avaliações de todas as ofertas são recalculadas quando o perfil muda (≈ 50 ms para 7.390 ofertas).
 
@@ -82,7 +80,5 @@ As avaliações de todas as ofertas são recalculadas quando o perfil muda (≈ 
   `ULTIMO_ANO` e `ANO_ALVO` são derivados da lista de fontes.
 - **Termo de adesão de 2027 (vagas e pesos):** acrescente como fonte do tipo `oferta`; o ETL usa o
   termo mais recente de cada curso.
-- **Outro provedor de LLM** (por exemplo, WebLLM no navegador): implemente `verificar` e `conversar`
-  e registre em `web/src/llm/provedores.ts`.
 - **Lista de espera de outra instituição:** escreva um leitor como `pipeline/ufv.py` que produza as
   mesmas colunas e acrescente-o em `espera.carregar`. A ligação com o catálogo é automática.

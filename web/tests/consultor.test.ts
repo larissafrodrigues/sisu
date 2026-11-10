@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { avaliarTudo } from "../src/core/avaliacao";
 import { Motor } from "../src/core/probabilidade";
-import { analisar, extrairEntidades } from "../src/llm/analise";
-import { montarContexto, PROMPT_SISTEMA } from "../src/llm/contexto";
-import { responderOffline } from "../src/llm/offline";
+import { analisar, extrairEntidades } from "../src/consultoria/analise";
+import { montarContexto } from "../src/consultoria/contexto";
+import { responderOffline } from "../src/consultoria/offline";
 import type { Estado } from "../src/state/store";
 import { base, perfil } from "./apoio";
 
@@ -11,7 +11,7 @@ const b = base();
 const motor = new Motor(b.modelo);
 
 function cenario(parcial: Partial<Estado["perfil"]> = {}, lista: Estado["lista"] = []) {
-  const estado: Estado = { perfil: perfil(parcial), lista, comparar: [], llm: { provedor: "vllm", url: "", chave: "", modelo: "", ativo: false } };
+  const estado: Estado = { perfil: perfil(parcial), lista, comparar: [] };
   const avals = avaliarTudo(b, motor, estado.perfil);
   const porOferta = new Map(avals.map((a) => [a.oferta.id, a]));
   const perguntar = (q: string) => {
@@ -41,7 +41,6 @@ describe("recuperação de contexto", () => {
     }
     expect(ctx).toContain("Regras do SISU");
     expect(ctx).toContain("Limites das previsões");
-    expect(PROMPT_SISTEMA).toContain("Nunca invente");
   });
   it("sem lugar na pergunta, prioriza os estados preferidos do perfil", () => {
     const { an } = cenario({ ufs: ["BA"] }).perguntar("minhas chances em enfermagem");
@@ -49,7 +48,7 @@ describe("recuperação de contexto", () => {
   });
 });
 
-describe("consultor offline", () => {
+describe("consultor com regras locais", () => {
   it("responde chance com intervalo e sem prometer", () => {
     const { off } = cenario().perguntar("Quais minhas chances em Direito na UFMG?");
     expect(off).toMatch(/Direito — UFMG/);
@@ -73,7 +72,7 @@ describe("consultor offline", () => {
     expect(off).toMatch(/Engenharia Civil \(UFMG\)/);
   });
   it("pede notas quando não há", () => {
-    const estado: Estado = { perfil: perfil({ edicoes: [] }), lista: [], comparar: [], llm: { provedor: "vllm", url: "", chave: "", modelo: "", ativo: false } };
+    const estado: Estado = { perfil: perfil({ edicoes: [] }), lista: [], comparar: [] };
     const avals = avaliarTudo(b, motor, estado.perfil);
     const an = analisar(b, motor, estado, avals, new Map(), "onde eu passo?");
     expect(responderOffline(b, estado, an, false, "onde eu passo?")).toMatch(/preciso das suas notas/);

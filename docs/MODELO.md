@@ -226,16 +226,10 @@ estimativas como "padrão geral".
 
 ## 9. Consultor
 
-`web/src/llm/`. O LLM não calcula nada. A cada pergunta:
+`web/src/consultoria/` apresenta respostas automáticas, sem modelo de linguagem remoto.
+A cada pergunta, `analise.ts` identifica cursos, instituições, estados e cidades, e recupera os resultados já calculados. `offline.ts` seleciona a resposta adequada com base em regras; `regras.ts` registra as fontes; e `contexto.ts` organiza os dados usados para conferência.
 
-1. `analise.ts` identifica cursos, instituições, estados e cidades citados e recupera as ofertas
-   correspondentes, já avaliadas para o perfil do estudante;
-2. `contexto.ts` monta o prompt com esses fatos e com as regras do SISU e suas fontes (`regras.ts`);
-3. `provedores.ts` envia ao servidor configurado (vLLM por padrão, ou Ollama) e transmite a
-   resposta; sem servidor, `offline.ts` monta a resposta por regras a partir dos mesmos fatos.
-
-A interface mostra os dados enviados em cada resposta. Um LLM ainda pode errar ao redigir; os
-números de referência são sempre os das telas.
+As respostas estão limitadas aos temas implementados. Para verificações mais detalhadas, consulte as telas **Explorar**, **Comparar**, **Estratégia** e **Lista de espera**.
 
 ## 10. O que a plataforma não sabe
 
