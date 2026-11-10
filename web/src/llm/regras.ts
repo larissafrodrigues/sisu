@@ -25,6 +25,6 @@ export const LIMITES = [
   "As previsões se baseiam nas notas de corte da chamada regular de 2014 a 2026 publicadas pelo MEC. Não são garantia de vaga.",
   "A incerteza é grande: metade das previsões erra por mais de ~16 pontos, e uma edição inteira pode subir ou descer 10 a 20 pontos (em 2026, as notas baixas subiram mais de 30).",
   "Vagas e pesos de 2027 só são conhecidos quando o MEC publica a oferta. Até lá valem os de 2026 (vagas) e os do último termo de adesão disponível (pesos).",
-  "A estimativa de lista de espera usa só dados da UFMG (2022–2026). É uma referência fraca para outras instituições.",
+  "A estimativa de lista de espera usa o histórico de cada curso na UFV e na UFMG (2022–2026). Para as demais instituições usa o padrão dessas duas em cursos parecidos, uma referência mais fraca.",
   "Notas parciais de corte, divulgadas durante a inscrição, são informação melhor que qualquer previsão: acompanhe-as.",
 ];

@@ -72,7 +72,7 @@ def test_mistura_e_monotona_e_inverte():
     assert abs(modelo.cdf_mistura(q, p, s, cen, zq)[0] - 0.8) < 1e-3
 
 
-precisa_dados = pytest.mark.skipif(not (PROCESSED / "relatorio_modelo.json").exists(), reason="rode o pipeline antes")
+precisa_dados = pytest.mark.skipif(not (PROCESSED / "painel.csv.gz").exists(), reason="rode o pipeline antes (python -m pipeline.run_all)")
 
 
 @precisa_dados
@@ -85,7 +85,6 @@ def test_painel_sem_duplicatas_e_cortes_validos():
     assert int(painel.loc[painel["ano"] == 2026, "vagas"].sum()) == 274133  # total divulgado pelo MEC
 
 
-@precisa_dados
 def test_modelo_bate_baselines_e_esta_calibrado():
     r = json.loads((PROCESSED / "relatorio_modelo.json").read_text(encoding="utf-8"))
     comp = {c["modelo"]: c["mae"] for c in r["backtest"]["comparacao"]}
@@ -94,7 +93,6 @@ def test_modelo_bate_baselines_e_esta_calibrado():
     assert 75 <= media["cob80"] <= 85 and 45 <= media["cob50"] <= 56 and 85 <= media["cob90"] <= 93
 
 
-@precisa_dados
 def test_exportacao_consistente():
     b = json.loads((WEB_DATA / "base.json").read_text(encoding="utf-8"))
     s = b["series"]
@@ -103,3 +101,21 @@ def test_exportacao_consistente():
     for q10, q50, q90 in zip(s["q10"], s["q50"], s["q90"]):
         assert q10 is None or q10 <= q50 <= q90
     assert max(s["of"]) == len(b["ofertas"]["id"]) - 1
+
+
+def test_lista_de_espera_exportada():
+    """espera.json e base.json estão versionados: confere o que o site usa."""
+    e = json.loads((PROCESSED / "espera.json").read_text(encoding="utf-8"))
+    assert set(e["ies"]) == {"UFMG", "UFV"} and e["peso_perfil"] > 0
+    for g, celulas in e["perfis"].items():
+        assert len(celulas) == len(e["limites"]) + 1
+        for c in celulas:
+            assert len(c["quantis"]) == len(e["probs"]) and c["quantis"] == sorted(c["quantis"]) and c["quantis"][0] >= 0
+    b = json.loads((WEB_DATA / "base.json").read_text(encoding="utf-8"))
+    ids = set(b["ofertas"]["id"])
+    assert b["espera"]["series"] and all(s["oferta"] in ids for s in b["espera"]["series"])
+    for s in b["espera"]["series"]:
+        for ano, regular, final, *_ in s["h"]:
+            # o menor convocado pode ficar ACIMA do corte da regular quando vagas de uma cota sem candidatos
+            # são remanejadas; a queda usada no cálculo é cortada em zero (pipeline/espera.py e core/espera.ts)
+            assert 2022 <= ano <= 2026 and 200 <= regular <= 900 and (final is None or 200 <= final <= 900)

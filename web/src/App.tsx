@@ -10,15 +10,17 @@ import { Consultor } from "./views/Consultor";
 import { Detalhe } from "./views/Detalhe";
 import { Estrategia } from "./views/Estrategia";
 import { Explorar } from "./views/Explorar";
+import { ListaEspera } from "./views/ListaEspera";
 import { Metodo } from "./views/Metodo";
 import { Painel } from "./views/Painel";
 import { PaginaPerfil } from "./views/Perfil";
 
-const ITENS: { rota: Rota; nome: string; icone: () => JSX.Element; soDesktop?: boolean }[] = [
+const ITENS: { rota: Rota; nome: string; curto?: string; icone: () => JSX.Element; soDesktop?: boolean }[] = [
   { rota: "painel", nome: "Painel", icone: Ic.painel },
   { rota: "explorar", nome: "Explorar", icone: Ic.busca },
   { rota: "comparar", nome: "Comparar", icone: Ic.comparar },
   { rota: "estrategia", nome: "Estratégia", icone: Ic.rota },
+  { rota: "espera", nome: "Lista de espera", curto: "Espera", icone: Ic.fila },
   { rota: "consultor", nome: "Consultor", icone: Ic.conversa },
   { rota: "perfil", nome: "Perfil", icone: Ic.pessoa },
   { rota: "metodo", nome: "Metodologia", icone: Ic.livro, soDesktop: true },
@@ -42,7 +44,7 @@ function Casca({ tema, setTema }: { tema: Preferencia; setTema: (p: Preferencia)
         <nav className="nav" aria-label="Seções">
           {ITENS.map((i) => (
             <a key={i.rota} href={`#/${i.rota}`} aria-current={rota === i.rota ? "page" : undefined} className={i.soDesktop ? "so-desktop" : undefined}>
-              {i.icone()}<span>{i.nome}</span>
+              {i.icone()}<span className={i.curto ? "nome-longo" : undefined}>{i.nome}</span>{i.curto && <span className="nome-curto">{i.curto}</span>}
               {!!conta[i.rota] && <span className="conta">{conta[i.rota]}</span>}
             </a>
           ))}
@@ -58,6 +60,7 @@ function Casca({ tema, setTema }: { tema: Preferencia; setTema: (p: Preferencia)
         {rota === "explorar" && <Explorar />}
         {rota === "comparar" && <Comparar ir={ir} />}
         {rota === "estrategia" && <Estrategia ir={ir} />}
+        {rota === "espera" && <ListaEspera ir={ir} />}
         {rota === "consultor" && <Consultor />}
         {rota === "metodo" && <Metodo />}
          <footer className="rodape-site">

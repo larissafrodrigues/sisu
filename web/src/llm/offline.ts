@@ -39,10 +39,24 @@ export function responderOffline(base: Base, estado: Estado, an: Analise, temNot
   const out: string[] = [];
 
   // ---- regras e conceitos: não dependem de notas ----
-  if (tem(q, "lista de espera", "espera")) {
+  if (an.sobreEspera) {
     out.push(regra("espera"));
-    const g = base.espera.grupos.AC;
-    out.push(`Quanto a lista anda? O MEC não publica isso. Na UFMG, de ${base.espera.anos[0]} a ${base.espera.anos[1]}, a nota mínima da ampla concorrência caiu em mediana **${fmt.nota1(g.mediana)} pontos** entre a chamada regular e a última chamada (metade dos cursos entre ${fmt.nota1(g.quantis[4])} e ${fmt.nota1(g.quantis[14])}). Use como referência, não como promessa: cada instituição tem seu ritmo de chamadas.`);
+    const comEspera = an.encontradas.filter((a) => an.espera.has(a.oferta.id));
+    if (temNotas && comEspera.length) {
+      out.push("Para os cursos da sua pergunta:");
+      for (const a of comEspera.slice(0, 6)) {
+        const ce = an.espera.get(a.oferta.id)!;
+        const o = a.oferta;
+        const fonte = ce.dist.base === "propria" ? `histórico do curso na ${ce.dist.ies}` : "padrão de cursos parecidos, estimativa mais fraca";
+        out.push(`- **${o.curso} — ${o.ies.sigla}** (${o.municipio}, ${o.turno.toLowerCase()}): ${fmt.pct(ce.regular)} na chamada regular; ` +
+          (ce.seNaoPassar == null ? "a regular já é quase certa" : `se não passar, **${fmt.pct(ce.seNaoPassar)}** de ser chamado depois`) +
+          `; ${fmt.pct(ce.total)} ao todo. A lista costuma descer uns ${fmt.nota1(ce.quedaMediana)} pontos abaixo do corte (${fonte}).`);
+      }
+    } else {
+      const partes = Object.entries(base.espera.ies).map(([s, i]) => `na **${s}** a lista desceu em mediana **${fmt.nota1(i.queda_mediana)} pontos** abaixo do corte da chamada regular`);
+      out.push(`Quanto a lista anda? O MEC não publica isso. De ${base.espera.anos[0]} a ${base.espera.anos[1]}, ${partes.join(" e ")}. Nas demais instituições a plataforma usa o padrão dessas duas.`);
+      if (temNotas) out.push("Diga o curso e a instituição (por exemplo, “lista de espera de Agronomia na UFV”) ou abra **Lista de espera** para ver a chance curso a curso.");
+    }
     if (an.planos.length) out.push(`Na sua lista, o plano equilibrado tem ${fmt.pct(an.planos[0].resultado.pEspera)} de vaga via lista de espera. Veja o detalhe em **Estratégia**.`);
     return out.join("\n\n");
   }

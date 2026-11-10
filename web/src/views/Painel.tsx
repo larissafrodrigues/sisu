@@ -157,11 +157,16 @@ export function Painel({ ir }: { ir: (r: Rota) => void }) {
         </section>
       )}
 
-      <div className="grade2" style={{ marginTop: 18 }}>
+      <div className="grade3" style={{ marginTop: 18 }}>
         <section className="painel">
           <h3>Monte a estratégia das duas opções</h3>
           <p className="mudo" style={{ margin: "6px 0 12px" }}>Guarde cursos na sua lista e veja qual ordem dá mais chance de vaga, com e sem lista de espera.</p>
           <button className="bt" onClick={() => ir("estrategia")}>Abrir estratégia{estado.lista.length ? ` (${estado.lista.length} na lista)` : ""}</button>
+        </section>
+        <section className="painel">
+          <h3>E se eu não passar na regular?</h3>
+          <p className="mudo" style={{ margin: "6px 0 12px" }}>Veja a chance de ser chamado pela lista de espera, com o histórico de cada curso da UFV e da UFMG.</p>
+          <button className="bt" onClick={() => ir("espera")}>Abrir lista de espera</button>
         </section>
         <section className="painel">
           <h3>Pergunte ao consultor</h3>

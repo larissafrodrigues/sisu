@@ -14,6 +14,7 @@ export const Ic = {
   busca: () => <Svg><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></Svg>,
   comparar: () => <Svg><path d="M7 4v16M17 4v16M3 8l4-4 4 4M13 16l4 4 4-4" /></Svg>,
   rota: () => <Svg><circle cx="6" cy="18" r="2.5" /><circle cx="18" cy="6" r="2.5" /><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5" /></Svg>,
+  fila: () => <Svg><circle cx="6" cy="7" r="2.2" /><circle cx="12" cy="7" r="2.2" /><circle cx="18" cy="7" r="2.2" /><path d="M3 15h18M15 12l3 3-3 3" /></Svg>,
   conversa: () => <Svg><path d="M4 5h16v11H9l-5 4z" /></Svg>,
   pessoa: () => <Svg><circle cx="12" cy="8" r="4" /><path d="M4 20c1.5-4 4.5-5 8-5s6.5 1 8 5" /></Svg>,
   livro: () => <Svg><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z" /><path d="M8 7h7M8 11h7" /></Svg>,

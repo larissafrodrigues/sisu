@@ -157,21 +157,72 @@ Três planos:
 
 ## 8. Lista de espera
 
-O MEC não publica notas da lista de espera. A única série pública encontrada com a nota mínima de
-cada chamada é a da UFMG. Em 3.316 séries de 2022 a 2026 (mediana de 15 chamadas), a queda da nota
-mínima entre a chamada regular e a última chamada foi:
+`pipeline/ufv.py`, `pipeline/espera.py` e `web/src/core/espera.ts`.
 
-| Grupo | Séries | Sem queda | Mediana | P25–P75 |
-|---|---|---|---|---|
-| Ampla concorrência | 457 | 0% | 29,4 | 17,4–52,4 |
-| Escola pública | 914 | 12% | 29,7 | 10,8–73,2 |
-| PPI | 914 | 1% | 63,8 | 36,7–104,3 |
-| PcD | 881 | 64% | 0,0 | 0,0–41,2 |
-| Quilombolas | 150 | 69% | 0,0 | 0,0–25,7 |
+**Dados.** O MEC não publica notas da lista de espera. Duas universidades publicam o suficiente:
 
-A plataforma aplica essa distribuição a qualquer instituição. **É uma extrapolação fraca**: a UFMG
-é uma universidade grande e disputada, e outras instituições podem se comportar de outro modo. Por
-isso a lista de espera aparece separada da chamada regular, com aviso, e pode ser desligada no simulador.
+- **UFV**: para cada edição, a página da 1ª chamada (classificados, pontos e modalidade) e a lista de
+  espera final (cada candidato, pontos e situação: "Convocado na Nª chamada pela modalidade X" ou
+  "Espera"). `pipeline/ufv.py` lê as duas versões de formato das páginas e grava só agregados por
+  curso e modalidade em `data/fontes/ufv_espera.csv` (nenhum nome ou inscrição).
+- **UFMG**: notas mínima e máxima de cada chamada (PDFs oficiais transcritos).
+
+Para cada curso, modalidade e edição de 2022 a 2026 (5.096 casos; 2.008 da UFV, 3.088 da UFMG):
+
+```
+queda = corte da chamada regular − menor nota convocada na lista de espera   (0 se ninguém foi chamado)
+```
+
+**Ligação com o catálogo.** Os nomes não batem com os do MEC ("QUIMICA" na UFV é "ABI - QUÍMICA"),
+mas o corte da chamada regular é o mesmo nas duas fontes. Cada curso é ligado à oferta da mesma
+instituição com mais cortes iguais (mesmo ano e modalidade, diferença menor que 0,06; mínimo de 5).
+Resultado: todas as 69 ofertas da UFV no SISU 2026 e 94 da UFMG.
+
+**Perfis.** Quantis da queda por grupo de modalidade (ampla, escola pública, PPI, PcD, quilombola) e
+faixa de nota de corte da regular, juntando as duas universidades. Medianas, em pontos:
+
+| Grupo | até 550 | 550–600 | 600–650 | 650–700 | 700–750 | acima de 750 |
+|---|---|---|---|---|---|---|
+| Ampla concorrência | 58,7 | 96,7 | 104,8 | 37,1 | 26,8 | 26,4 |
+| Escola pública | 0,0 | 82,9 | 79,1 | 34,0 | 20,3 | 13,7 |
+| PPI | 52,1 | 103,7 | 73,6 | 47,5 | 35,3 | 29,9 |
+
+Cursos muito disputados quase não abrem vaga na lista; os de corte intermediário são os que mais
+descem. Células com menos de 30 casos usam as faixas vizinhas.
+
+**Distribuição de cada curso.** Para cursos da UFV e da UFMG, as quedas observadas do próprio curso
+(peso 1 cada) misturadas ao perfil, que entra com peso de 4 anos. Para as demais, só o perfil. O peso
+foi escolhido deixando um ano de fora por vez (3.726 previsões):
+
+| Método | Erro (CRPS, pontos) | Faixa de 80% acertou |
+|---|---|---|
+| só o histórico do curso | 30,78 | 60,7% |
+| histórico + perfil (peso 1) | 28,62 | 66,4% |
+| histórico + perfil (peso 2) | 27,83 | 74,9% |
+| histórico + perfil (peso 4) | 27,52 | 80,6% |
+| só o perfil | 30,76 | 82,5% |
+
+**Chance.** Em cada cenário da edição, a chance de ser alcançado pela lista é a média, sobre a
+distribuição da queda, de `P(corte da regular ≤ nota + queda)`. Cotistas estão na lista da cota e na
+da ampla concorrência: vale a maior das duas. A chance "se não passar na regular" é
+`chance pela lista ÷ (1 − chance na regular)`, mostrada só quando a regular não é quase certa.
+
+**Transferência para outras instituições.** Prevendo uma universidade só com o perfil da outra:
+
+- perfil da UFV prevendo a UFMG: faixa de 80% acertou 84,6% (erro mediano 25,8 pontos);
+- perfil da UFMG prevendo a UFV: faixa de 80% acertou 71,1% (erro mediano 37,2 pontos).
+
+A UFV desce mais que a UFMG (queda mediana de 64,9 contra 42,7 pontos). Uma terceira
+instituição pode se parecer com uma, com outra ou com nenhuma; por isso a interface marca essas
+estimativas como "padrão geral".
+
+**Limitações.**
+
+- Em 48% das modalidades da UFV a lista zerou (todos os inscritos foram chamados). A queda
+  observada é um piso; a estimativa fica conservadora.
+- A queda depende de quantas chamadas a instituição faz e de quantos aprovados não se matriculam.
+  Isso muda de ano para ano e de instituição para instituição.
+- Vagas não preenchidas de uma modalidade são remanejadas para outras, o que mistura as listas.
 
 ## 9. Consultor
 
@@ -193,5 +244,6 @@ números de referência são sempre os das telas.
 - A nota parcial durante a semana de inscrições. Quando o SISU abrir, a nota de corte parcial do
   próprio sistema é informação melhor do que qualquer previsão feita antes.
 - A situação individual de cada candidato quanto à documentação de cotas.
+- O ritmo da lista de espera nas instituições que não publicam esses dados (todas menos UFV e UFMG).
 
 Previsão não é garantia de vaga.

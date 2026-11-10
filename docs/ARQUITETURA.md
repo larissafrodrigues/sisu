@@ -23,7 +23,8 @@
 | `etl.py` | Monta o painel (oferta × modalidade × ano) e o catálogo com pesos e mínimas |
 | `atributos.py` | Atributos do modelo, só com informação disponível antes de cada edição |
 | `modelo.py` | Backtest temporal, modelo central, escala, cenários, calibração, previsões |
-| `espera.py` | Distribuição da queda da nota mínima entre chamadas (UFMG) |
+| `ufv.py` | Lê as páginas oficiais de lista de espera da UFV e grava `data/fontes/ufv_espera.csv` |
+| `espera.py` | Lista de espera: junta UFV e UFMG, liga ao catálogo, monta perfis e valida |
 | `exportar.py` | Gera os JSON do site |
 | `run_all.py` | Orquestra tudo |
 
@@ -35,6 +36,7 @@
 | `notas.ts` | Média ponderada, notas mínimas, melhor edição do Enem por curso |
 | `probabilidade.ts` | `Motor`: CDF de mistura sobre cenários, quantis, faixas de chance |
 | `avaliacao.ts` | Elegibilidade a cotas, regra “ampla concorrência primeiro”, afinidade com preferências |
+| `espera.ts` | Distribuição da queda da lista de espera e chance de ser chamado depois da regular |
 | `estrategia.ts` | Desfechos de um par ordenado de opções, lista de espera, três planos |
 | `lista.ts` | Ponte entre a lista salva e os candidatos da estratégia |
 
@@ -82,4 +84,5 @@ As avaliações de todas as ofertas são recalculadas quando o perfil muda (≈ 
   termo mais recente de cada curso.
 - **Outro provedor de LLM** (por exemplo, WebLLM no navegador): implemente `verificar` e `conversar`
   e registre em `web/src/llm/provedores.ts`.
-- **Lista de espera de outras instituições:** some séries no mesmo formato em `espera.py`.
+- **Lista de espera de outra instituição:** escreva um leitor como `pipeline/ufv.py` que produza as
+  mesmas colunas e acrescente-o em `espera.carregar`. A ligação com o catálogo é automática.

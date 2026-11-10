@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { modalidadesElegiveis, notaEfetiva, probAprovacao, serieAC } from "../core/avaliacao";
 import { carregarDescricoes, carregarHistorico } from "../core/dados";
-import { grupoEspera } from "../core/estrategia";
+import { chanceEspera } from "../core/espera";
 import { mediaPonderada, motivoInelegivel, edicaoPreenchida } from "../core/notas";
 import { ROTULO_FAIXA, faixaDe } from "../core/probabilidade";
 import { fmt } from "../core/texto";
 import { AREAS, NOME_AREA, type Historico, type Serie } from "../core/tipos";
 import { useApp, type Rota } from "../state/store";
 import { Chance } from "../ui/Chance";
+import { BlocoEspera } from "../ui/BlocoEspera";
 import { GraficoHistorico, type SerieGrafico } from "../ui/Grafico";
 import { Ic } from "../ui/Icones";
 
@@ -60,7 +61,6 @@ export function Detalhe({ id, ir }: { id: string; ir: (r: Rota) => void }) {
     seriesGraf.push({ nome: serie.mod.codigo === "AC" ? "Ampla concorrência" : serie.mod.rotulo, cor: "var(--s1)", valores: hist.cortes.get(serie.idx) ?? [], previsao: prev(serie) });
     if (ac && ac.idx !== serie.idx) seriesGraf.push({ nome: "Ampla concorrência", cor: "var(--s2)", valores: hist.cortes.get(ac.idx) ?? [], previsao: prev(ac) });
   }
-  const espera = serie ? base.espera.grupos[grupoEspera(serie.mod.codigo)] : null;
   const vi = hist && serie ? { v: hist.vagas.get(serie.idx) ?? [], i: hist.inscritos.get(serie.idx) ?? [] } : null;
 
   return (
@@ -179,15 +179,11 @@ export function Detalhe({ id, ir }: { id: string; ir: (r: Rota) => void }) {
           {estado.perfil.edicoes.filter(edicaoPreenchida).length > 1 && <p className="pequeno mudo" style={{ marginTop: 8 }}>✓ edição usada pelo SISU neste curso (melhor média ponderada). * não cumpre alguma nota mínima.</p>}
         </section>
 
-        {espera && serie?.corte != null && (
+        {serie?.q50 != null && (
           <section className="painel">
             <h3>E a lista de espera?</h3>
-            <p style={{ color: "var(--tinta2)", marginTop: 6 }}>
-              O MEC só publica o corte da chamada regular. Na UFMG, única série pública por chamada que encontramos ({base.espera.anos[0]}–{base.espera.anos[1]}),
-              a nota mínima deste tipo de modalidade caiu em mediana <strong>{fmt.nota1(espera.mediana)} pontos</strong> até a última chamada
-              (metade dos casos entre {fmt.nota1(espera.quantis[4])} e {fmt.nota1(espera.quantis[14])}){espera.sem_queda > 0.3 ? `; em ${Math.round(espera.sem_queda * 100)}% não houve queda` : ""}.
-              Tome como referência fraca: cada instituição chama em ritmo próprio.
-            </p>
+            <BlocoEspera base={base} oferta={o} serie={serie} ce={nota != null ? chanceEspera(motor, base.espera, o, serie, nota) : null} />
+            <p className="pequeno" style={{ marginTop: 8 }}><a href="#/espera" onClick={() => abrirDetalhe(null)}>Comparar a lista de espera de outros cursos</a></p>
           </section>
         )}
 

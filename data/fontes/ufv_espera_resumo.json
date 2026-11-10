@@ -1,0 +1,47 @@
+{
+ "2022": {
+  "chamadas": 10,
+  "convocados_regular": 3017,
+  "convocados_espera": 3352,
+  "paginas": [
+   "https://www2.pse.ufv.br/wp-content/uploads/2022/02/sisu2022-chamada-1.htm",
+   "https://www2.pse.ufv.br/wp-content/uploads/2022/05/sisu2022-espera-7.htm"
+  ]
+ },
+ "2023": {
+  "chamadas": 7,
+  "convocados_regular": 3029,
+  "convocados_espera": 2874,
+  "paginas": [
+   "https://www2.pse.ufv.br/wp-content/uploads/2023/02/sisu2023-chamada-1.htm",
+   "https://www2.pse.ufv.br/wp-content/uploads/2023/04/sisu2023-espera-5.htm"
+  ]
+ },
+ "2024": {
+  "chamadas": 11,
+  "convocados_regular": 2979,
+  "convocados_espera": 2752,
+  "paginas": [
+   "https://www2.pse.ufv.br/wp-content/uploads/2024/02/sisu2024-chamada-1.htm",
+   "https://www2.pse.ufv.br/wp-content/uploads/2024/05/sisu2024-espera-11.htm"
+  ]
+ },
+ "2025": {
+  "chamadas": 14,
+  "convocados_regular": 3194,
+  "convocados_espera": 2861,
+  "paginas": [
+   "https://www2.pse.ufv.br/wp-content/uploads/2025/01/sisu2025-chamada-1.htm",
+   "https://www2.pse.ufv.br/wp-content/uploads/2025/03/sisu2025-espera-14.htm"
+  ]
+ },
+ "2026": {
+  "chamadas": 12,
+  "convocados_regular": 3338,
+  "convocados_espera": 4406,
+  "paginas": [
+   "https://www2.pse.ufv.br/wp-content/uploads/2026/01/sisu2026-chamada-1.htm",
+   "https://www2.pse.ufv.br/wp-content/uploads/2026/03/sisu2026-espera-5.htm"
+  ]
+ }
+}

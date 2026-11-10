@@ -58,18 +58,32 @@ não pode entrar na lista de espera. Por isso uma 2ª opção "garantida" proteg
 vaga, mas tira a chance de ser chamado depois na 1ª. A tela Estratégia calcula essa troca para cada
 combinação e sugere três planos: equilibrado, seguro e ousado.
 
+## A lista de espera
+
+Quem não passa na chamada regular pode entrar na lista de espera de uma das opções. Para saber
+até onde a lista costuma descer, usamos as listas oficiais da **UFV** e da **UFMG** de 2022 a 2026:
+em cada curso, quanto a menor nota chamada ficou abaixo do corte da chamada regular.
+
+- **Cursos da UFV e da UFMG:** usamos o histórico do próprio curso, misturado com o padrão de cursos
+  parecidos (com cinco anos só, um ano fora da curva pesaria demais).
+- **Outras instituições:** usamos o padrão da UFV e da UFMG para cursos com o mesmo tipo de cota e
+  nota de corte parecida. É uma estimativa mais fraca, e a tela avisa.
+
+A tela **Lista de espera** mostra, para cada curso, a chance na chamada regular, a chance de ser
+chamado depois para quem não passou e a chance ao todo.
+
 ## O que a plataforma não sabe
 
 - **As regras, vagas e pesos de 2027.** Até o MEC publicar, usamos os das edições anteriores.
-- **A lista de espera.** O MEC não divulga essas notas. A estimativa usa só dados da UFMG e é uma
-  referência fraca para outras instituições.
+- **A lista de espera fora da UFV e da UFMG.** O MEC não divulga essas notas. Nas outras instituições
+  a estimativa usa o padrão dessas duas, que pode não valer para todas.
 - **O que acontece durante a inscrição.** A nota de corte parcial do próprio SISU, que muda todo
   dia, é informação melhor do que qualquer previsão.
 
 ## De onde vêm os dados
 
 Dos relatórios públicos do MEC com as notas de corte, vagas e inscritos do SISU. Para a lista de
-espera, dos relatórios da UFMG. A lista de arquivos está em [DADOS.md](DADOS.md).
+espera, das páginas oficiais da UFV e da UFMG. A lista de arquivos está em [DADOS.md](DADOS.md).
 
 ## O consultor
 

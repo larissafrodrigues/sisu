@@ -7,7 +7,6 @@ import { useApp } from "../state/store";
 import { Glifo } from "../ui/Chance";
 
 const FAIXAS: [Faixa, string][] = [["alta", "80% ou mais"], ["moderada", "de 50% a 79%"], ["baixa", "de 20% a 49%"], ["remota", "menos de 20%"]];
-const NOME_GRUPO: Record<string, string> = { AC: "Ampla concorrência", EP: "Escola pública", PPI: "Pretos, pardos e indígenas", PCD: "Pessoas com deficiência", Q: "Quilombolas" };
 
 export function Metodo() {
   const { base } = useApp();
@@ -99,14 +98,14 @@ export function Metodo() {
           <h2>O que a plataforma não sabe</h2>
           <ul className="prosa" style={{ margin: "10px 0 0", paddingLeft: 18 }}>
             <li><strong>As regras, vagas e pesos de {alvo}.</strong> Até o MEC publicar, usamos os das edições anteriores.</li>
-            <li><strong>A lista de espera.</strong> O MEC não divulga essas notas. A estimativa usa só dados da UFMG e é uma referência fraca para outras instituições.</li>
+            <li><strong>A lista de espera fora da UFV e da UFMG.</strong> O MEC não divulga essas notas. Para as outras instituições usamos o padrão dessas duas, uma referência mais fraca.</li>
             <li><strong>O que acontece durante a inscrição.</strong> A nota de corte parcial do próprio SISU, que muda todo dia, é informação melhor do que qualquer previsão. Acompanhe.</li>
           </ul>
         </section>
         <section className="painel">
           <h2>De onde vêm os dados</h2>
           <div className="prosa" style={{ marginTop: 10 }}>
-            <p>Dos relatórios públicos do MEC com as notas de corte, vagas e inscritos do SISU. Para a lista de espera, dos relatórios da UFMG. Não usamos dados inventados.</p>
+            <p>Dos relatórios públicos do MEC com as notas de corte, vagas e inscritos do SISU. Para a lista de espera, das páginas oficiais da UFV e da UFMG. Não usamos dados inventados.</p>
             <p><strong>O consultor</strong> não faz contas: ele recebe os números calculados aqui e os explica em texto. Em cada resposta você pode abrir os dados que ele usou.</p>
           </div>
         </section>
@@ -166,18 +165,31 @@ export function Metodo() {
       </details>
 
       <details className="painel mais">
-        <summary>Lista de espera na UFMG</summary>
+        <summary>Lista de espera na UFV e na UFMG</summary>
         <p className="mudo pequeno" style={{ margin: "10px 0", maxWidth: "80ch" }}>
-          Quanto a nota mínima caiu entre a chamada regular e a última chamada, de {base.espera.anos[0]} a {base.espera.anos[1]} ({fmt.int(base.espera.n)} casos).
+          Quanto a lista de espera desceu abaixo do corte da chamada regular, de {base.espera.anos[0]} a {base.espera.anos[1]} ({fmt.int(base.espera.n)} casos de curso, modalidade e ano).
+          Para cursos dessas duas universidades usamos o histórico do próprio curso misturado a este padrão; para as demais, só o padrão.
+          {" "}Fontes: {Object.entries(base.espera.ies).map(([s, i], k) => <span key={s}>{k > 0 && ", "}<a href={i.origem} target="_blank" rel="noreferrer">{i.titulo}</a></span>)}.
         </p>
         <div className="tab-wrap">
           <table>
             <thead><tr><th>Grupo</th><th className="num">Não caiu</th><th className="num">Queda típica, em pontos</th></tr></thead>
             <tbody>{Object.entries(base.espera.grupos).map(([g, v]) => (
-              <tr key={g}><td>{NOME_GRUPO[g] ?? g}</td><td className="num">{Math.round(v.sem_queda * 100)}%</td><td className="num">{fmt.nota1(v.mediana)}</td></tr>
+              <tr key={g}><td>{base.espera.nome_grupo[g] ?? g}</td><td className="num">{Math.round(v.sem_queda * 100)}%</td><td className="num">{fmt.nota1(v.mediana)}</td></tr>
             ))}</tbody>
           </table>
         </div>
+        <h3 style={{ marginTop: 18 }}>A estimativa acerta?</h3>
+        <ul className="prosa" style={{ margin: "8px 0 0", paddingLeft: 18 }}>
+          {base.espera.validacao.troca_de_universidade.map((t: any) => (
+            <li key={t.prevista}>Prevendo a {t.prevista} só com o padrão da {t.com_dados_de}, a faixa de 80% acertou <strong>{fmt.nota1(t.cobertura80)}%</strong> dos casos.</li>
+          ))}
+          {(() => {
+            const v = base.espera.validacao.ano_deixado_de_fora;
+            const m = v.metodos.find((x: any) => x.peso_perfil === base.espera.peso_perfil);
+            return m ? <li>Para cursos com histórico próprio, prevendo um ano deixado de fora, a faixa de 80% acertou <strong>{fmt.nota1(m.cobertura80)}%</strong> dos casos ({fmt.int(v.n)} testes).</li> : null;
+          })()}
+        </ul>
       </details>
 
       <details className="painel mais">

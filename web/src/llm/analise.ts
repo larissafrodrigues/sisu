@@ -3,6 +3,7 @@
  * É a etapa de "grounding": o assistente só fala de números que saem daqui.
  */
 import type { Avaliacao } from "../core/avaliacao";
+import { chanceEspera, type ChanceEspera } from "../core/espera";
 import { recomendar, type Plano } from "../core/estrategia";
 import { paraCandidatos, resolverLista, type ItemResolvido } from "../core/lista";
 import { mediaSimples } from "../core/notas";
@@ -34,6 +35,10 @@ export interface Analise {
   universo: string;
   melhores: Avaliacao[]; // boas oportunidades dentro das preferências
   mediaSimples: number | null;
+  /** Lista de espera das ofertas citadas, da lista e das melhores (id da oferta → estimativa). */
+  espera: Map<string, ChanceEspera>;
+  /** A pergunta é sobre lista de espera / ser chamado depois. */
+  sobreEspera: boolean;
 }
 
 let indice: { cursos: [string, string][]; siglas: Map<string, string>; municipios: Map<string, string> } | null = null;
@@ -110,8 +115,16 @@ export function analisar(base: Base, motor: Motor, estado: Estado, avaliacoes: A
     .slice(0, 8);
 
   const comNota = p.edicoes.filter((ed) => ed.notas.red > 0 && ed.notas.mt > 0);
+  const espera = new Map<string, ChanceEspera>();
+  for (const a of [...encontradas, ...melhores, ...lista.map((i) => ({ ...i.aval, serie: i.serie }))]) {
+    if (espera.has(a.oferta.id) || !a.nota.elegivel || !a.serie) continue;
+    const ce = chanceEspera(motor, base.espera, a.oferta, a.serie, a.nota.nota);
+    if (ce) espera.set(a.oferta.id, ce);
+  }
+  const qn = semAcento(pergunta);
+  const sobreEspera = /lista de espera|\bespera\b|ser chamad|for chamad|proximas chamadas|outras chamadas|segunda chamada|depois da (chamada )?regular/.test(qn);
   return {
-    entidades: e, encontradas, lista, planos, resumo, melhores,
+    entidades: e, encontradas, lista, planos, resumo, melhores, espera, sobreEspera,
     universo: temPref ? "ofertas dos seus cursos e áreas de interesse" + (p.ufs.length ? ` em ${p.ufs.join(", ")}` : "") : "todas as ofertas do SISU" + (p.ufs.length ? ` em ${p.ufs.join(", ")}` : ""),
     mediaSimples: comNota.length ? Math.max(...comNota.map((ed) => mediaSimples(ed.notas))) : null,
   };

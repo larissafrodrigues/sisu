@@ -1,5 +1,5 @@
 /** Carrega e decodifica os JSON gerados pelo pipeline (web/public/data). */
-import type { Base, Historico, Ies, Modalidade, Oferta, Serie } from "./tipos";
+import type { Base, EvidenciaEspera, HistEspera, Historico, Ies, Modalidade, Oferta, Serie } from "./tipos";
 import { semAcento } from "./texto";
 
 const RAIZ = `${import.meta.env.BASE_URL}data/`;
@@ -83,9 +83,20 @@ export function decodificar(b: any): Base {
     modalidades,
     tendencias: new Map(Object.entries(b.tendencias).map(([k, v]) => [d.cursos[Number(k)], v as (number | null)[]])),
     modelo: b.modelo,
-    espera: b.espera,
+    espera: decodificarEspera(b.espera),
     contagens: b.contagens,
   };
+}
+
+export function decodificarEspera(e: any): EvidenciaEspera {
+  const series = new Map<string, { ies: string; hist: HistEspera[] }>();
+  for (const s of e.series ?? []) {
+    series.set(`${s.oferta}#${s.mod}`, {
+      ies: s.ies,
+      hist: s.h.map((h: any[]) => ({ ano: h[0], regular: h[1], final: h[2], convocados: h[3], lista: h[4], esgotou: h[5] == null ? null : h[5] === 1 })),
+    });
+  }
+  return { ...e, series };
 }
 
 export async function carregarBase(): Promise<Base> {

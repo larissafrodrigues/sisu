@@ -10,7 +10,7 @@
  * A regra 3 cria o dilema central: uma 2ª opção "garantida" protege contra ficar sem vaga,
  * mas elimina a chance de ser chamado depois na 1ª. Aqui isso é calculado, não opinado.
  */
-import { aprovacaoPorCenario } from "./avaliacao";
+import { vetoresEspera } from "./espera";
 import { CENARIO_PADRAO, media, type Cenario, type Motor } from "./probabilidade";
 import type { EvidenciaEspera, Oferta, Serie } from "./tipos";
 
@@ -22,14 +22,7 @@ export interface Candidato {
   interesse: number;
 }
 
-export function grupoEspera(codigo: string): string {
-  if (codigo === "AC") return "AC";
-  if (codigo.includes("PCD")) return "PCD";
-  if (codigo.endsWith("_Q")) return "Q";
-  if (codigo.includes("PPI") || codigo.endsWith("_PP") || codigo.endsWith("_I")) return "PPI";
-  if (codigo.startsWith("L")) return "EP";
-  return "AC";
-}
+export { grupoEspera } from "./espera";
 
 export interface Vetores {
   /** P(selecionado na chamada regular) em cada cenário. */
@@ -39,15 +32,7 @@ export interface Vetores {
 }
 
 export function vetores(motor: Motor, espera: EvidenciaEspera, c: Candidato, cen: Cenario = CENARIO_PADRAO): Vetores {
-  const regular = aprovacaoPorCenario(motor, c.oferta, c.serie, c.nota, cen);
-  const quedas = espera.grupos[grupoEspera(c.serie.mod.codigo)]?.quantis ?? [0];
-  const soma = new Array(regular.length).fill(0);
-  for (const d of quedas) {
-    // a lista de espera "anda" até (corte − queda): equivale a ter `d` pontos a mais
-    const v = aprovacaoPorCenario(motor, c.oferta, c.serie, c.nota, cen, d);
-    for (let k = 0; k < soma.length; k++) soma[k] += v[k];
-  }
-  return { regular, espera: soma.map((s, k) => Math.max(0, s / quedas.length - regular[k])) };
+  return vetoresEspera(motor, espera, c.oferta, c.serie, c.nota, cen);
 }
 
 export interface ResultadoPar {

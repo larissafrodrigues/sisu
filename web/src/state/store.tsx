@@ -127,8 +127,8 @@ export function useApp(): Contexto {
 }
 
 /** Rota simples por hash: funciona em hospedagem estática sem configuração de servidor. */
-export type Rota = "painel" | "perfil" | "explorar" | "comparar" | "estrategia" | "consultor" | "metodo";
-const ROTAS: Rota[] = ["painel", "perfil", "explorar", "comparar", "estrategia", "consultor", "metodo"];
+export type Rota = "painel" | "perfil" | "explorar" | "comparar" | "estrategia" | "espera" | "consultor" | "metodo";
+const ROTAS: Rota[] = ["painel", "perfil", "explorar", "comparar", "estrategia", "espera", "consultor", "metodo"];
 
 export function useRota(): [Rota, (r: Rota) => void] {
   const lerHash = (): Rota => {

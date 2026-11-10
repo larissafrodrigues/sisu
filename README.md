@@ -9,7 +9,7 @@ Tudo roda no navegador. O site é estático: funciona no GitHub Pages e em qualq
 
 | | |
 |---|---|
-| Dados | Relatórios oficiais do SISU/MEC, 2014–2026 (≈ 549 mil linhas), mais as chamadas da lista de espera da UFMG |
+| Dados | Relatórios oficiais do SISU/MEC, 2014–2026 (≈ 549 mil linhas), mais as listas de espera da UFV e da UFMG (2022–2026) |
 | Catálogo | 7.390 ofertas, 136 instituições, 587 municípios, 274.133 vagas (SISU 2026) |
 | Modelo | Gradient boosting + cenários de choque de edição + calibração empírica; avaliado fora da amostra |
 | Erro | 23,7 pontos de erro absoluto médio (repetir a última nota de corte: 25,9); intervalos de 80% cobrem 79% em média |
@@ -64,6 +64,7 @@ Sem servidor algum, o consultor responde no **modo offline**, montando as respos
 ```bash
 pip install -r pipeline/requirements.txt
 python -m pipeline.run_all        # baixa (~130 MB), limpa, treina, valida e exporta (≈ 5 min)
+python -m pipeline.ufv --conferir # confere a lista de espera da UFV com o site oficial
 python -m pytest pipeline/tests   # testes do pipeline
 cd web && npm test                # testes do motor e do consultor (usam os dados reais)
 ```
@@ -111,18 +112,19 @@ Mais em [docs/ARQUITETURA.md](docs/ARQUITETURA.md). Para entender os cálculos s
 O seletor fica no menu lateral (no celular, na barra do topo): **Claro**, **Escuro** ou **Auto**, que
 segue o tema do aparelho. A escolha fica salva no navegador.
 
-## As quatro capacidades
+## O que a plataforma faz
 
 1. **Descoberta** — Painel e Explorar ordenam as 7.390 ofertas pelas preferências e pela chance; o Painel sugere cursos vizinhos da mesma área com chance alta.
 2. **Análise preditiva** — cada modalidade de cada curso tem previsão central, intervalo de 80%, rótulo de confiança e histórico desde 2014. A página Metodologia mostra o erro do modelo e a cobertura real dos intervalos.
-3. **Estratégia** — avalia todas as combinações ordenadas da lista do estudante sob as regras do edital (seleção em uma única opção; lista de espera só para quem não foi selecionado) e devolve planos equilibrado, seguro e ousado, com simulador de “e se”.
-4. **Consultor** — LLM fundamentado: a cada pergunta recebe só os fatos calculados pela plataforma e as regras com fonte, e a resposta mostra os dados usados.
+3. **Lista de espera** — chance de ser chamado depois da chamada regular, curso a curso: histórico próprio para os cursos da UFV e da UFMG, padrão dessas duas para as demais instituições.
+4. **Estratégia** — avalia todas as combinações ordenadas da lista do estudante sob as regras do edital (seleção em uma única opção; lista de espera só para quem não foi selecionado) e devolve planos equilibrado, seguro e ousado, com simulador de “e se”.
+5. **Consultor** — LLM fundamentado: a cada pergunta recebe só os fatos calculados pela plataforma e as regras com fonte, e a resposta mostra os dados usados.
 
 ## Fontes
 
 Relatórios “Inscrições e notas de corte” e “Vagas ofertadas” do SISU, publicados pelo MEC em
 <https://sisu.mec.gov.br/#/relatorio>, e “notas máximas e mínimas por chamada” da UFMG
-(<https://www.ufmg.br/sisu/repositorio/>). O pipeline baixa cópias desses arquivos de espelhos
+(<https://www.ufmg.br/sisu/repositorio/>), e listas de espera da UFV (<https://www2.pse.ufv.br>). O pipeline baixa cópias desses arquivos de espelhos
 públicos fixados por commit e grava o SHA-256 de cada um em `data/raw/MANIFESTO.json`; a lista
 completa, com links, aparece na página Metodologia e em [docs/DADOS.md](docs/DADOS.md).
 

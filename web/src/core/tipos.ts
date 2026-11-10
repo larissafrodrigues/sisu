@@ -100,14 +100,54 @@ export interface ParametrosModelo {
   choques: { anos: number[]; centros: number[]; valores: number[][] };
 }
 
+/** Um ano do histórico de lista de espera de um curso/modalidade (UFV ou UFMG). */
+export interface HistEspera {
+  ano: number;
+  regular: number; // nota de corte da chamada regular
+  final: number | null; // menor nota convocada na lista de espera (null: ninguém foi convocado)
+  convocados: number | null; // só a UFV publica as contagens
+  lista: number | null;
+  esgotou: boolean | null; // todos os candidatos da lista foram convocados
+}
+
+export interface CelulaPerfil {
+  n: number;
+  base: string;
+  n_base: number;
+  sem_queda: number | null;
+  mediana: number;
+  quantis: number[];
+}
+
+export interface InfoIesEspera {
+  titulo: string;
+  origem: string;
+  series: number;
+  cursos: number;
+  cursos_no_catalogo: number;
+  queda_mediana: number;
+  queda_p25: number;
+  queda_p75: number;
+  esgotou: number | null;
+  anos: Record<string, { chamadas: number; convocados_regular: number | null; convocados_espera: number | null }>;
+}
+
 export interface EvidenciaEspera {
   fonte: string;
-  origem: string;
   anos: number[];
   probs: number[];
-  chamadas_mediana: number;
+  limites: number[];
+  rotulos_faixa: string[];
+  peso_perfil: number;
   n: number;
   grupos: Record<string, { n: number; sem_queda: number; mediana: number; quantis: number[] }>;
+  nome_grupo: Record<string, string>;
+  /** grupo → uma célula por faixa de nota de corte */
+  perfis: Record<string, CelulaPerfil[]>;
+  ies: Record<string, InfoIesEspera>;
+  /** chave `${idDaOferta}#${modalidade}` */
+  series: Map<string, { ies: string; hist: HistEspera[] }>;
+  validacao: any;
 }
 
 export interface Base {

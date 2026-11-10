@@ -1,5 +1,6 @@
 /** Monta o texto de contexto e o prompt de sistema enviados ao modelo de linguagem. */
 import type { Avaliacao } from "../core/avaliacao";
+import type { ChanceEspera } from "../core/espera";
 import type { Plano, ResultadoPar } from "../core/estrategia";
 import { ROTULO_FAIXA, faixaDe } from "../core/probabilidade";
 import { fmt } from "../core/texto";
@@ -10,7 +11,7 @@ import { LIMITES, REGRAS } from "./regras";
 
 const CONF = ["baixa", "média", "alta"];
 
-export function linhaOferta(a: Avaliacao, base: Base): string {
+export function linhaOferta(a: Avaliacao, base: Base, ce?: ChanceEspera | null): string {
   const o = a.oferta;
   const s = a.serie;
   const partes = [`${o.curso} — ${o.ies.sigla} (${o.municipio}/${o.uf}), ${o.turno}, ${o.grau}`];
@@ -26,6 +27,7 @@ export function linhaOferta(a: Avaliacao, base: Base): string {
     if (s.q50 != null) {
       partes.push(`previsão ${base.anoAlvo}: ${fmt.nota1(s.q50)} (intervalo de 80%: ${fmt.nota1(s.q10)} a ${fmt.nota1(s.q90)}; confiança ${CONF[s.confianca]})`);
       partes.push(`chance na chamada regular: ${fmt.pct(a.prob)} (${ROTULO_FAIXA[faixaDe(a.prob)].toLowerCase()})`);
+      if (ce) partes.push(textoEspera(ce));
     } else {
       partes.push("sem nota de corte de referência em " + base.anoBase);
     }
@@ -33,10 +35,20 @@ export function linhaOferta(a: Avaliacao, base: Base): string {
   return partes.join(" | ");
 }
 
+/** Lista de espera em uma linha, dizendo de onde vem a estimativa. */
+export function textoEspera(ce: ChanceEspera): string {
+  const base = ce.dist.base === "propria"
+    ? `histórico do próprio curso na ${ce.dist.ies}, ${ce.dist.hist.length} edições`
+    : "padrão da UFV e da UFMG em cursos parecidos; estimativa mais fraca";
+  return `lista de espera (${base}): queda típica de ${fmt.nota1(ce.quedaMediana)} pontos abaixo do corte` +
+    (ce.alcanceTipico != null ? `, chegaria a cerca de ${fmt.nota1(ce.alcanceTipico)}` : "") +
+    `; se não passar na regular, chance de ser chamado depois: ${ce.seNaoPassar == null ? "não se aplica (a regular já é quase certa)" : fmt.pct(ce.seNaoPassar)}; vaga ao todo: ${fmt.pct(ce.total)}`;
+}
+
 function linhaPlano(r: ResultadoPar): string {
   const n = (c: ResultadoPar["a"] | null) => (c ? `${c.oferta.curso} (${c.oferta.ies.sigla}, ${c.oferta.municipio}/${c.oferta.uf})` : "sem 2ª opção");
   return `1ª opção ${n(r.a)}; 2ª opção ${n(r.b)} → vaga na 1ª: ${fmt.pct(r.p1)}, vaga na 2ª: ${fmt.pct(r.p2)}, ` +
-    `lista de espera (estimativa fraca): ${fmt.pct(r.pEspera)}, sem vaga: ${fmt.pct(r.pSemVaga)}`;
+    `lista de espera: ${fmt.pct(r.pEspera)}, sem vaga: ${fmt.pct(r.pSemVaga)}`;
 }
 
 export function textoPlanos(planos: Plano[]): string[] {
@@ -70,17 +82,17 @@ export function montarContexto(base: Base, estado: Estado, an: Analise, temNotas
     L.push(an.resumo.map((r) => `${ROTULO_FAIXA[r.faixa]}: ${r.n} ofertas`).join("; "));
     if (an.melhores.length) {
       L.push("Melhores oportunidades dentro das preferências (chance ≥ 50%):");
-      an.melhores.forEach((a) => L.push("- " + linhaOferta(a, base)));
+      an.melhores.forEach((a) => L.push("- " + linhaOferta(a, base, an.espera.get(a.oferta.id))));
     }
     if (an.encontradas.length) {
       L.push("");
       L.push("### Ofertas relacionadas à pergunta");
-      an.encontradas.forEach((a) => L.push("- " + linhaOferta(a, base)));
+      an.encontradas.forEach((a) => L.push("- " + linhaOferta(a, base, an.espera.get(a.oferta.id))));
     }
     if (an.lista.length) {
       L.push("");
       L.push("### Lista de interesse do estudante (interesse de 1 a 5)");
-      an.lista.forEach((i) => L.push(`- [interesse ${i.interesse}] ` + linhaOferta({ ...i.aval, serie: i.serie }, base)));
+      an.lista.forEach((i) => L.push(`- [interesse ${i.interesse}] ` + linhaOferta({ ...i.aval, serie: i.serie }, base, an.espera.get(i.aval.oferta.id))));
     }
     if (an.planos.length) {
       L.push("");
@@ -88,6 +100,10 @@ export function montarContexto(base: Base, estado: Estado, an: Analise, temNotas
       textoPlanos(an.planos).forEach((t) => L.push("- " + t));
     }
   }
+  L.push("");
+  L.push(`### Lista de espera: de onde vêm os números`);
+  const ies = Object.entries(base.espera.ies).map(([s, i]) => `${s} (${i.cursos_no_catalogo} cursos, ${base.espera.anos[0]}–${base.espera.anos[1]}; queda mediana ${fmt.nota1(i.queda_mediana)} pontos)`);
+  L.push(`Há histórico de lista de espera por curso só para: ${ies.join("; ")}. Nas outras instituições a estimativa usa o padrão dessas duas em cursos com nota de corte parecida. A tela "Lista de espera" da plataforma mostra a chance por curso.`);
   L.push("");
   L.push("### Regras do SISU (com fonte)");
   REGRAS.forEach((r) => L.push(`- ${r.texto} [${r.fonte}]`));

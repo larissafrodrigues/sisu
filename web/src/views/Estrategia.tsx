@@ -179,7 +179,7 @@ export function Estrategia({ ir }: { ir: (r: Rota) => void }) {
                   {fixarChoque && <span className="pequeno mudo">{choque > 0 ? "Notas de corte sobem em relação ao previsto (cenário pior para você)." : choque < 0 ? "Notas de corte caem em relação ao previsto." : "Edição sem surpresa: cortes como o modelo prevê."} Em 2026 as mais baixas subiram cerca de 36 pontos; em 2021 caíram 23.</span>}
                 </div>
                 <label className="marca-caixa"><input type="checkbox" checked={comEspera} onChange={(e) => setComEspera(e.target.checked)} />
-                  <span>Contar com a lista de espera<br /><span className="pequeno mudo">Estimativa fraca, baseada só na UFMG. Desmarque para ver o cenário sem ela.</span></span></label>
+                  <span>Contar com a lista de espera<br /><span className="pequeno mudo">Usa o histórico de cada curso na UFV e na UFMG e, nas demais, o padrão dessas duas. Desmarque para ver o cenário sem ela.</span></span></label>
               </div>
               <div>
                 {sim && (

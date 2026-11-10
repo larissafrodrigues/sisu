@@ -167,7 +167,7 @@ def main() -> None:
     tam["descricoes.json"] = _grava(WEB_DATA / "descricoes.json", descricoes)
     relatorio_web = {k: v for k, v in relatorio.items() if k not in ("z",)}
     relatorio_web["fontes"] = fontes
-    relatorio_web["espera"] = espera
+    relatorio_web["espera"] = {k: v for k, v in espera.items() if k != "series"}  # o histórico já vai em base.json
     tam["relatorio.json"] = _grava(WEB_DATA / "relatorio.json", relatorio_web)
 
     # ---------- históricos por UF ----------

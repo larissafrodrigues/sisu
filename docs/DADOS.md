@@ -10,10 +10,21 @@ não existe em fonte pública aparece como ausente, e as aproximações estão l
 | `cortes_2010_2018` | Sisu 2010 a 2018 – Nota de corte | MEC/SISU | Séries de 2014 a 2018 |
 | `cortes_2019` … `cortes_2026` | Sisu AAAA – Inscrições e notas de corte | MEC/SISU | Nota de corte da chamada regular, vagas e inscritos por modalidade |
 | `oferta_2019` … `oferta_2025` | Sisu AAAA – Vagas ofertadas (termo de adesão) | MEC/SISU | Pesos das provas, notas mínimas e vagas por curso |
-| `ufmg_chamadas` | SISU/UFMG – notas máximas e mínimas por chamada | UFMG | Evidência sobre a lista de espera |
+| `ufmg_chamadas` | SISU/UFMG – notas máximas e mínimas por chamada | UFMG | Lista de espera da UFMG |
+| `data/fontes/ufv_espera.csv` | SISU/UFV – 1ª chamada e lista de espera final, 2022–2026 | UFV | Lista de espera da UFV |
 
 - Origem oficial dos relatórios do SISU: <https://sisu.mec.gov.br/#/relatorio> (catalogados também em <https://dadosabertos.mec.gov.br/sisu>).
 - Origem oficial das chamadas da UFMG: <https://www.ufmg.br/sisu/repositorio/>.
+- Origem oficial das listas da UFV: <https://www2.pse.ufv.br/?resultados_psa_sisu=2025> ("Processos Seletivos Anteriores"); as páginas usadas estão em `pipeline/ufv.py` e em `data/fontes/ufv_espera_resumo.json`.
+
+### Lista de espera da UFV
+
+As páginas da UFV não vêm de espelho: `python -m pipeline.ufv` baixa direto do site oficial e grava
+só agregados por curso e modalidade (corte da regular, menor convocado na lista, convocados, tamanho
+da lista, se zerou). Nenhum nome ou número de inscrição é guardado. O resultado fica versionado em
+`data/fontes/`, então o pipeline completo não depende do site estar no ar.
+
+Para auditar: `python -m pipeline.ufv --conferir` baixa as páginas de novo e compara com o arquivo.
 
 ### Por que o download vem de espelhos
 
@@ -47,7 +58,7 @@ pipeline a partir do ETL (`python -m pipeline.etl`).
 | `previsoes.csv.gz` | 46.996 previsões para 2027 (centro, escala, quantis, confiança) |
 | `backtest.csv.gz` | 225.705 previsões fora da amostra (2019–2026) com o valor real |
 | `relatorio_modelo.json` | Métricas, calibração, cenários e importâncias |
-| `espera.json` | Distribuição da queda da nota mínima entre chamadas (UFMG) |
+| `espera.json` | Lista de espera: perfis, histórico por curso da UFV e da UFMG, validação |
 
 `web/public/data/` (o que o site carrega, versionado):
 
@@ -82,7 +93,7 @@ pipeline a partir do ETL (`python -m pipeline.etl`).
   antes e depois dessa mudança é uma aproximação; séries novas têm histórico curto e recebem
   confiança baixa.
 - **Só a chamada regular.** O MEC publica a nota de corte da chamada regular. O que acontece na
-  lista de espera só é conhecido, de forma sistemática, para a UFMG.
+  lista de espera só é conhecido, de forma sistemática, para a UFV e a UFMG.
 - **Sem microdados.** A plataforma não usa dados individuais de candidatos (os microdados do SISU não
   estavam acessíveis para o pipeline). Por isso não há modelo de taxa de matrícula nem de posição na fila.
 - **Bônus regionais.** Nas modalidades com bônus, a nota é multiplicada pelo percentual do relatório.
